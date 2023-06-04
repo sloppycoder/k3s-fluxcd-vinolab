@@ -25,7 +25,7 @@ metadata:
   namespace: kube-system
 spec:
   basicAuth:
-    secret: traefik-htpasswd
+    secret: dashboard-auth-secret
 
 ---
 # to create htpasswd file,
