@@ -23,7 +23,7 @@ spec:
     match: PathPrefix(`/longhorn`)
     priority: 90
     middlewares:
-    - name: dashboard-auth
+    - name: longhorn-auth
       namespace: longhorn-system
     - name: strip-prefix-longhorn-ui
       namespace: longhorn-system
@@ -36,7 +36,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: dashboard-auth
+  name: longhorn-auth
   namespace: longhorn-system
 spec:
   basicAuth:
@@ -44,8 +44,8 @@ spec:
     removeHeader: true
 
 ---
-# to encode a string without line break
-# echo -n "username" | base64
+# to create htpasswd file,
+#   htpasswd -c htpasswd username
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
@@ -58,16 +58,12 @@ spec:
   target:
     name: dashboard-auth-secret
     template:
-      type: kubernetes.io/basic-auth
+      type: Opaque
       data:
-        username: "{{ .username | toString }}"
-        password: "{{ .password | toString }}"
+        htpasswd: |
+          {{ .htpasswd }}
   data:
-  - secretKey: username
+  - secretKey: htpasswd
     remoteRef:
       key: infra-secret
-      property: console_user
-  - secretKey: password
-    remoteRef:
-      key: infra-secret
-      property: console_password
+      property: console_htpasswd
