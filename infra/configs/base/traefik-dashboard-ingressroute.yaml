@@ -14,3 +14,35 @@ spec:
     services:
     - name: api@internal
       kind: TraefikService
+    middlewares:
+    - name: traefik-auth
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-auth
+  namespace: kube-system
+spec:
+  basicAuth:
+    secret: traefik-htpasswd
+
+---
+# to create htpasswd file,
+#   htpasswd -c htpasswd username
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: dashboard-auth-secret
+  namespace: kube-system
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: gcp-secret-manager
+  target:
+    name: dashboard-auth-secret
+  data:
+  - secretKey: htpasswd
+    remoteRef:
+      key: infra-secret
+      property: console_htpasswd
