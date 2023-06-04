@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: kube-system
+spec:
+  entryPoints:
+  - web
+  - websecure
+  routes:
+  - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    priority: 90
+    kind: Rule
+    services:
+    - name: api@internal
+      kind: TraefikService

@@ -1,0 +1,73 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-prefix-longhorn-ui
+  namespace: longhorn-system
+spec:
+  stripPrefix:
+    prefixes:
+    - /longhorn
+
+---
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: longhorn-frontend
+  namespace: longhorn-system
+spec:
+  entryPoints:
+  - web
+  - websecure
+  routes:
+  - kind: Rule
+    match: PathPrefix(`/longhorn`)
+    priority: 90
+    middlewares:
+    - name: dashboard-auth
+      namespace: longhorn-system
+    - name: strip-prefix-longhorn-ui
+      namespace: longhorn-system
+    services:
+    - kind: Service
+      name: longhorn-frontend
+      port: 80
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: dashboard-auth
+  namespace: longhorn-system
+spec:
+  basicAuth:
+    secret: dashboard-auth-secret
+    removeHeader: true
+
+---
+# to encode a string without line break
+# echo -n "username" | base64
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: dashboard-auth-secret
+  namespace: longhorn-system
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: gcp-secret-manager
+  target:
+    name: dashboard-auth-secret
+    template:
+      type: kubernetes.io/basic-auth
+      data:
+        username: "{{ .username | toString }}"
+        password: "{{ .password | toString }}"
+  data:
+  - secretKey: username
+    remoteRef:
+      key: infra-secret
+      property: console_user
+  - secretKey: password
+    remoteRef:
+      key: infra-secret
+      property: console_password
