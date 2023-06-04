@@ -26,10 +26,10 @@ export GITHUB_TOKEN=ghp_pat
 flux bootstrap github   \
      --components-extra=image-reflector-controller,image-automation-controller \
      --owner=sloppycoder \
-     --repository=k3s-gitops \
+     --repository=k3s-fluxcd-vinolab \
      --branch=main \
      --read-write-key \
-     --path=clusters/<cluster-name>
+     --path=clusters/super6
 ```
 
 ## Access Dashboards
