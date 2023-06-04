@@ -41,6 +41,11 @@ spec:
     name: gcp-secret-manager
   target:
     name: dashboard-auth-secret
+    template:
+      type: Opaque
+      data:
+        htpasswd: |
+          {{ .htpasswd }}
   data:
   - secretKey: htpasswd
     remoteRef:
