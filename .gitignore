@@ -1,0 +1,6 @@
+*.bak
+*.env
+*.lic
+gcpsm-secret.yaml
+infra-secret.json
+team-ssh-keys.json
