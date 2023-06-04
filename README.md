@@ -15,19 +15,21 @@ This repository contains configuration used by FluxCD V2 to manage K3S cluster, 
 
 I used [my fork of k3s-ansible](https://github.com/sloppycoder/k3s-ansible) repository to perform initial cluster install and initializations.
 
-## Bootstrap FlexCD
+## Bootstrap FluxCD
 
 First perform the steps in [prep](prep), basically create a few secrets in GCP Secret Manager which will be used later in the setup process. I use external secret to avoid the hassle of setup SOPS and managing keys locally. With the added benefit that setting up a new cluster is really easy, the secrets can be synced from the cloud the same way.
+
+Download Flux CLI, follow the [officail documentation](https://fluxcd.io/flux/cmd/), then
 
 ```shell
 export GITHUB_TOKEN=ghp_pat
 flux bootstrap github   \
      --components-extra=image-reflector-controller,image-automation-controller \
      --owner=sloppycoder \
-     --repository=k3s-fluxcd-vinolab \
+     --repository=k3s-gitops \
      --branch=main \
      --read-write-key \
-     --path=clusters/super6
+     --path=clusters/<cluster-name>
 ```
 
 ## Access Dashboards
