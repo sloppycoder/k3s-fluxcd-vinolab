@@ -4,7 +4,7 @@ metadata:
   name: cert-manager
   namespace: infra
 spec:
-  interval: 24h
+  interval: 72h
   url: https://charts.jetstack.io
 
 ---
@@ -14,7 +14,7 @@ metadata:
   name: cert-manager
   namespace: infra
 spec:
-  interval: 30m
+  interval: 24h
   chart:
     spec:
       chart: cert-manager

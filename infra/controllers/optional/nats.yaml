@@ -4,7 +4,7 @@ metadata:
   name: nats
   namespace: infra
 spec:
-  interval: 24h
+  interval: 72h
   url: https://nats-io.github.io/k8s/helm/charts/
 
 ---
@@ -14,7 +14,7 @@ metadata:
   name: nats
   namespace: infra
 spec:
-  interval: 30m
+  interval: 24h
   chart:
     spec:
       chart: nats
@@ -50,7 +50,7 @@ metadata:
   name: nack
   namespace: infra
 spec:
-  interval: 30m
+  interval: 24h
   chart:
     spec:
       chart: nack
