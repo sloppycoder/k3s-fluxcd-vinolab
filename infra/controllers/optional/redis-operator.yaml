@@ -4,7 +4,7 @@ metadata:
   name: redis-operator
   namespace: infra
 spec:
-  interval: 24h
+  interval: 72h
   url: https://spotahome.github.io/redis-operator
 
 ---
@@ -14,7 +14,7 @@ metadata:
   name: redis-operator
   namespace: infra
 spec:
-  interval: 30m
+  interval: 24h
   chart:
     spec:
       chart: redis-operator

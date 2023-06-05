@@ -4,7 +4,7 @@ metadata:
   name: newrelic-bundle
   namespace: infra
 spec:
-  interval: 24h
+  interval: 72h
   url: https://helm-charts.newrelic.com
 
 ---
@@ -14,7 +14,7 @@ metadata:
   name: nri-bundle
   namespace: infra
 spec:
-  interval: 30m
+  interval: 24h
   chart:
     spec:
       chart: nri-bundle
