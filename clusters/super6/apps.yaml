@@ -67,7 +67,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: vinobank-repo-main
-  namespace: vinobank
+  namespace: flux-system
 spec:
   interval: 1m0s
   ref:
@@ -81,7 +81,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: app-vinobank-prod
-  namespace: flux-system
+  namespace: vinobank
 spec:
   interval: 10m0s
   sourceRef:
