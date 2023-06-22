@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
 - repo-secret.yaml
 - ../../base
-- ../../namespaces/dev
+- ../../namespaces/vinobank-dev
+
 
