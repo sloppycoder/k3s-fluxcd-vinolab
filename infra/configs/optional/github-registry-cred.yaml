@@ -12,9 +12,10 @@ spec:
     template:
       type: kubernetes.io/dockerconfigjson
       data:
-        .dockerconfigjson: "{{ .mysecret | toString }}"
+        .dockerconfigjson: "{{ .auth | toString }}"
     creationPolicy: Owner
   data:
-  - secretKey: mysecret
+  - secretKey: auth
     remoteRef:
-      key: dockerconfigjson
+      key: infra-secret
+      property: dockerconfigjson
