@@ -4,5 +4,6 @@ resources:
 - repo-secret.yaml
 - ../../base
 - ../../optional/newrelic.yaml
+- ../../optional/github-registry-cred.yaml
 - ../../namespaces/vinobank-dev
 - ../../namespaces/vinobank
