@@ -130,7 +130,7 @@ spec:
   interval: 10m0s
   sourceRef:
     kind: GitRepository
-    name: vinobank-repo
+    name: vinobank-repo-dev
   path: ./git-indexer/env/dev
   wait: true
   prune: true
