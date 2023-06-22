@@ -9,10 +9,12 @@ spec:
     name: gcp-secret-manager
   target:
     name: ghcr-cred-2
+    template:
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: "{{ .mysecret | toString }}"
+    creationPolicy: Owner
   data:
-  - secretKey: .dockerconfigjson
+  - secretKey: mysecret
     remoteRef:
-      key: infra-secrets
-      property: dockerconfigjson
-  template:
-    type: kubernetes.io/dockerconfigjson
+      key: dockerconfigjson
