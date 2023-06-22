@@ -119,3 +119,46 @@ spec:
   update:
     path: ./transfer-demo
     strategy: Setters
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app-git-indexer-dev
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  sourceRef:
+    kind: GitRepository
+    name: vinobank-repo
+  path: ./git-indexer/env/dev
+  wait: true
+  prune: true
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: app-git-indexer-dev
+  namespace: bbx-dev
+spec:
+  suspend: false
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: vinobank-repo
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: develop
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
+    push:
+      branch: develop
+  update:
+    path: ./git-indexer
+    strategy: Setters
