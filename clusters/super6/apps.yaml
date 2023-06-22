@@ -38,7 +38,7 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
   name: app-vinobank-dev
-  namespace: flux-system
+  namespace: vinobank-dev
 spec:
   suspend: false
   interval: 1m0s
@@ -61,7 +61,7 @@ spec:
     path: ./transfer-demo
     strategy: Setters
 
-# dev env setup
+# prod env setup
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
@@ -96,7 +96,7 @@ apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
   name: app-vinobank-prod
-  namespace: flux-system
+  namespace: vinobank
 spec:
   suspend: false
   interval: 1m0s
