@@ -3,5 +3,7 @@ kind: Kustomization
 resources:
 - repo-secret.yaml
 - ../../base
-- ../../namespaces/dev
+- ../../optional/github-registry-cred.yaml
+- ../../namespaces/bbx-dev
+
 

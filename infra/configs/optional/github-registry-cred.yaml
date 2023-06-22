@@ -1,0 +1,21 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ghcr-cred
+  namespace: flux-system
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: gcp-secret-manager
+  target:
+    name: ghcr-cred
+    template:
+      type: kubernetes.io/dockerconfigjson
+      data:
+        .dockerconfigjson: "{{ .auth | toString }}"
+    creationPolicy: Owner
+  data:
+  - secretKey: auth
+    remoteRef:
+      key: infra-secret
+      property: dockerconfigjson
