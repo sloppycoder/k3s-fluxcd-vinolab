@@ -7,3 +7,4 @@ resources:
 - ../../optional/github-registry-cred.yaml
 - ../../namespaces/vinobank-dev
 - ../../namespaces/vinobank
+- ../../namespaces/bbx-dev
