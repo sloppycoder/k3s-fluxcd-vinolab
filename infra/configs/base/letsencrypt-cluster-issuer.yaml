@@ -42,9 +42,9 @@ spec:
   data:
   - secretKey: aws_access_key_id
     remoteRef:
-      key: aws-dns-credential
+      key: infra-secret
       property: aws_access_key_id
   - secretKey: aws_secret_access_key
     remoteRef:
-      key: aws-dns-credential
+      key: infra-secret
       property: aws_secret_access_key
