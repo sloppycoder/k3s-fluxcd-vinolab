@@ -40,11 +40,11 @@ spec:
   target:
     name: aws-dns-credential
   data:
-  - secretKey: aws_access_key_id
+  - secretKey: route53_aws_access_key_id
     remoteRef:
       key: infra-secret
       property: aws_access_key_id
-  - secretKey: aws_secret_access_key
+  - secretKey: route53_aws_secret_access_key
     remoteRef:
       key: infra-secret
       property: aws_secret_access_key
