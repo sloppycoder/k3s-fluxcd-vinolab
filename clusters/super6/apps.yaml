@@ -146,7 +146,7 @@ spec:
   interval: 1m0s
   sourceRef:
     kind: GitRepository
-    name: vinobank-repo
+    name: vinobank-repo-dev
     namespace: flux-system
   git:
     checkout:
