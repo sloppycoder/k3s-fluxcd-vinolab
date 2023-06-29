@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - ../../base
 - ../../optional/cert-manager.yaml
+- ../../optional/kubegres
