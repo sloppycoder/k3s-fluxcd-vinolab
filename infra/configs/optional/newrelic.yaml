@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: nri-bundle
-      version: "5.0.15"
+      version: "5.0.22"
       sourceRef:
         kind: HelmRepository
         name: newrelic-bundle
@@ -26,16 +26,20 @@ spec:
       interval: 12h
   values:
     global:
+      # cluster name will be patched by kustomize during deployment
       cluster: rancher-desktop
       lowDataMode: true
     newrelic-infrastructure:
       privileged: true
     ksm:
       enabled: true
+      prometheusScrape: false
     kubeEvents:
-      enabled: true
+      # disable to lower data sent to NR
+      enabled: false
     newrelic-prometheus-agent:
-      enabled: true
+      # disable to lower data sent to NR
+      enabled: false
     newrelic-logging:
       enabled: true
       fluentBit:
