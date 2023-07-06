@@ -36,10 +36,10 @@ flux bootstrap github   \
 
 | URL  | Usage   |
 |------|---------|
-| http://192.168.1.204/  | Weave Gitops dashboard   |
-| http://192.168.1.204/dashboard  | Traefik dashboard   |
-| http://192.168.1.204/longhorn  | Longhorn dashboard (if installed)  |
-| http://192.168.1.204/whoami  | test pod |
+| <http://192.168.1.204/>  | Weave Gitops dashboard   |
+| <http://192.168.1.204/dashboard>  | Traefik dashboard   |
+| <http://192.168.1.204/longhorn>  | Longhorn dashboard (if installed)  |
+| <http://192.168.1.204/whoami>  | test pod |
 
 ## Content
 
@@ -47,7 +47,7 @@ flux bootstrap github   \
 |-------|---------|
 | [prep](prep) | steps to be peform manually prior to bootstrap FluxCD |
 | [infra/controllers](infra/controllers) | infra components that creates CRDs that other configurations depend on. ```base``` directory contains the common components, ```optional``` directory contains the optional components, ```clusters``` directory contains the overlay for each cluster under management. |
-| [infra/configs](infra/configs) | infra components configurations that uses, including those that depends on CRD in the ```controllers``` direcrory. The directory structure is similiar to ```controllers``` directory.  |
+| [infra/configs](infra/configs) | infra components configurations that uses, including those that depends on CRD in the ```controllers``` direcrory. The directory structure is similiar to ```controllers``` directory. ```namespaces``` diretory cotnains individual namespaces that will be created and their associated configuration, including networkpolicy. Each namespace can include components from [optional](infra/optional) directory.  |
 | [clusters/](clusters/)| bootstrap and cluster specific configurations. the apps.yaml in each cluster defines the applications that will be deployed. The manifests for each application is expected to contain in a separate Git repository, see [vinobank-gitops](https://github.com/vino9org/vinobank-gitops) for an example. |  |
 
 ## Components
@@ -65,4 +65,4 @@ The following components are managed by FluxCD:
 
 ## Notes
 
-This setup can be used in any K3S setup and should be easily adaptable to other K8S environment, e.g. AWS EKS or GKE. During the development I used Rancher Desktop locally on my Mac and things worked just fine.
+This setup can be used in any K3S setup and should be easily adaptable to other K8S environment, e.g. AWS EKS or GKE.
