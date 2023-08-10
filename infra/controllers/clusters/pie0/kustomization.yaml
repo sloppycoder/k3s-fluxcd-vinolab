@@ -18,8 +18,8 @@ patchesJson6902:
       path: /spec/template/spec/containers/0/env/1/value
       value: /home/nfs
     - op: replace
-      path: /spec/template/spec/volumes/0/nfs/server/value
+      path: /spec/template/spec/volumes/0/nfs/server
       value: 127.0.0.1
     - op: replace
-      path: /spec/template/spec/volumes/0/nfs/path/value
+      path: /spec/template/spec/volumes/0/nfs/path
       value: /home/nfs
