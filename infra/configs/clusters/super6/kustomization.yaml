@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - repo-secret.yaml
 - ../../base
+- ../../optional/letsencrypt-cluster-issuer.yaml
 - ../../optional/newrelic.yaml
 - ../../optional/github-registry-cred.yaml
 - ../../namespaces/vinobank-dev
