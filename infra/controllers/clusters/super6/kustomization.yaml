@@ -6,4 +6,5 @@ resources:
 - ../../optional/nfs-subdir-external-provisioner
 - ../../optional/longhorn
 - ../../optional/kubegres
+- ../../optional/nats.yaml
 
