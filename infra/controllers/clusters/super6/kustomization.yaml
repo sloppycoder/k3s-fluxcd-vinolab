@@ -7,5 +7,4 @@ resources:
 - ../../optional/longhorn
 - ../../optional/kubegres
 - ../../optional/nats.yaml
-- ../../optional/redis-operator.yaml
 
