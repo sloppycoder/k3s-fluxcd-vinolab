@@ -66,3 +66,14 @@ The following components are managed by FluxCD:
 ## Notes
 
 This setup can be used in any K3S setup and should be easily adaptable to other K8S environment, e.g. AWS EKS or GKE.
+
+## Upgrade
+upgrade flux
+
+```shell
+
+flux install \
+--components-extra image-reflector-controller,image-automation-controller \
+--export > clusters/super6/flux-system/gotk-components.yaml
+
+```
