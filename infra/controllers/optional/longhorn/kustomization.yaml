@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- https://raw.githubusercontent.com/longhorn/longhorn/v1.4.3/deploy/longhorn.yaml
+- https://raw.githubusercontent.com/longhorn/longhorn/v1.5.3/deploy/longhorn.yaml
 - storage-class.yaml
 - longhorn-dashboard-ingressroute.yaml
