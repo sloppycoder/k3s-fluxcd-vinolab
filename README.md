@@ -72,8 +72,13 @@ upgrade flux
 
 ```shell
 
+# checkout this repo
+
 flux install \
 --components-extra image-reflector-controller,image-automation-controller \
 --export > clusters/super6/flux-system/gotk-components.yaml
+
+git commit -m "Upgrade to flux version 2.x.x"
+git push
 
 ```
