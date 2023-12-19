@@ -13,8 +13,8 @@ spec:
   ref:
     branch: develop
   secretRef:
-    name: vinobank-repo-key
-  url: ssh://git@github.com/vino9org/vinobank-gitops
+    name: vinobank-repo-token
+  url: https://github.com/vino9org/vinobank-gitops
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
