@@ -10,11 +10,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
+  url: https://github.com/vino9org/vinobank-gitops
   ref:
     branch: develop
   secretRef:
     name: vinobank-repo-token
-  url: https://github.com/vino9org/vinobank-gitops
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
