@@ -26,6 +26,7 @@ metadata:
 spec:
   basicAuth:
     secret: dashboard-auth-secret
+    removeHeader: true
 
 ---
 # to create htpasswd file,
