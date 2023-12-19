@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - gcp-secret-store.yaml
-# - traefik-dashboard-ingressroute.yaml
+- traefik-dashboard-ingressroute.yaml
 - weave-gitops.yaml
 - whoami.yaml
 
