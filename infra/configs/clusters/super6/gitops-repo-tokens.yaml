@@ -1,7 +1,7 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: team-ssh-keys
+  name: vinobank-repo-token
   namespace: flux-system
 spec:
   secretStoreRef:
