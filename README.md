@@ -54,7 +54,7 @@ flux bootstrap github   \
 
 The following components are managed by FluxCD:
 
-* [external-secrets](https://external-secrets.io/v0.8.3/) for syncing secrets from external source (e.g. GCP) to the cluster
+* [external-secrets](https://external-secrets.io/) for syncing secrets from external source (e.g. GCP) to the cluster
 * [Longhorn](https://longhorn.io) for persistent storage
 * [nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner) for using NFS based persistent volumes.
 * [cert-manager](https://cert-manager.io/) setup to works with [Let's Encrpt](https://letsencrypt.org/)
@@ -68,6 +68,7 @@ The following components are managed by FluxCD:
 This setup can be used in any K3S setup and should be easily adaptable to other K8S environment, e.g. AWS EKS or GKE.
 
 ## Upgrade
+
 upgrade flux
 
 ```shell
