@@ -5,6 +5,3 @@ resources:
 - github.com/kubernetes-sigs/nfs-subdir-external-provisioner//deploy
 
 namespace: infra
-
-patches:
-- path: patch-nfs-details.yaml

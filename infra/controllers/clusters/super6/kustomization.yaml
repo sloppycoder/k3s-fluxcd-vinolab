@@ -8,3 +8,5 @@ resources:
 - ../../optional/kubegres
 - ../../optional/nats.yaml
 
+patches:
+- path: patch-nfs-server.yaml
