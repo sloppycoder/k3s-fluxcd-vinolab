@@ -12,14 +12,15 @@ kubectl create namespace infra
 kubectl apply -f gcpsm-secret.yaml -n infra
 ```
 
-## create an secret in GCP secret manager
+## create GCP secret for credentials to dashboards and etc
 
 ```shell
 
+# this is the credential to access GCP secret manager
 printf ' {"newrelic_license_key":"new_relic_api_key", \
     "gitops_username": "<your gitopts console user name>", \
     "gitops_password": "<your gitopts console password hash>"}' > infra_secret.json
 
-gcloud secrets create infra-secret --project vino9-276317 --data-file=infra-secret.json
+gcloud secrets create infra-secret --project project_id --data-file=infra-secret.json
 
 ```
