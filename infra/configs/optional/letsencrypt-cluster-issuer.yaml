@@ -6,9 +6,9 @@ metadata:
 spec:
   acme:
     email: guru.lin@gmail.com
-    # server: https://acme-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     # use staging server for experimentation and troubleshooting
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-issuer
     solvers:
@@ -19,10 +19,10 @@ spec:
           hostedZoneID: Z00868421PWBTNO5RU29G
           accessKeyIDSecretRef:
             name: aws-dns-credential
-            key: aws_access_key_id
+            key: route53_aws_access_key_id
           secretAccessKeySecretRef:
             name: aws-dns-credential
-            key: aws_secret_access_key
+            key: route53_aws_secret_access_key
       selector:
         dnsZones:
         - "app.vino9.net"
