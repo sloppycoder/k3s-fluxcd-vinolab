@@ -27,34 +27,3 @@ spec:
     name: flux-system
   path: ./infra/configs/clusters/k3s-aws
   prune: true
-  patches:
-  # set cluster name in NewRelic
-  - patch: |
-      - op: replace
-        path: /spec/values/global/cluster
-        value: k3s-aws
-    target:
-      kind: HelmRelease
-      name: nri-bundle
-      namespace: infra
-  # add file storage to NATS
-  - patch: |
-      - op: replace
-        path: /spec/valuesContent/nats/fileStorage
-        value:
-          enabled: true
-          size: 2Gi
-          storageDirectory: /data/
-    target:
-      kind: HelmRelease
-      name: nats
-      namespace: infra
-  # use production let's encrypt server
-  - patch: |
-      - op: replace
-        path: /spec/acme/server
-        value: https://acme-v02.api.letsencrypt.org/directory
-    target:
-      kind: ClusterIssuer
-      name: letsencrypt-issuer
-      namespace: infra
