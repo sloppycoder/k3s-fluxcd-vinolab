@@ -3,7 +3,4 @@ kind: Kustomization
 resources:
 - ../../base
 - ../../optional/github-registry-cred.yaml
-- ../../optional/longhorn-dashboard-ingressroute.yaml
 - ../../optional/gitops-repo-tokens.yaml
-# - ../../namespaces/vinobank-dev
-- ../../namespaces/bbx-dev

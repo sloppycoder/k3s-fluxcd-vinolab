@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/controllers/clusters/gf63
+  path: ./infra/controllers/clusters/k3s-aws
   prune: true
   wait: true
 
@@ -25,14 +25,14 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/configs/clusters/gf63
+  path: ./infra/configs/clusters/k3s-aws
   prune: true
   patches:
   # set cluster name in NewRelic
   - patch: |
       - op: replace
         path: /spec/values/global/cluster
-        value: gf63
+        value: k3s-aws
     target:
       kind: HelmRelease
       name: nri-bundle
