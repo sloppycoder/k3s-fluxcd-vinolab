@@ -58,4 +58,4 @@ spec:
 #       branch: develop
 #   update:
 #     path: ./core-sim
-    strategy: Setters
+#     strategy: Setters
