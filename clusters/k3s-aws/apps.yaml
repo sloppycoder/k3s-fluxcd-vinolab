@@ -27,6 +27,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: vinobank-repo-dev
+    namespace: flux-system
   path: ./core-sim/env/dev
   wait: true
   prune: true
