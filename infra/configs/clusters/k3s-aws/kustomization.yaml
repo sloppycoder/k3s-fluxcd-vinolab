@@ -4,5 +4,5 @@ resources:
 - ../../base
 - ../../optional/github-registry-cred.yaml
 - ../../optional/gitops-repo-tokens.yaml
-- ../../namespaces/vinobank
+- ../../namespaces/vinobank-dev
 
