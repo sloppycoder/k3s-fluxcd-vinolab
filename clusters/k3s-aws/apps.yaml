@@ -28,7 +28,7 @@ spec:
     kind: GitRepository
     name: vinobank-repo-dev
     namespace: flux-system
-  path: coresim/env/dev
+  path: core-sim/env/dev
   wait: true
   prune: true
 
