@@ -28,7 +28,7 @@ spec:
     kind: GitRepository
     name: vinobank-repo-dev
     namespace: flux-system
-  path: ./core-sim/env/dev
+  path: ./coresim/env/dev
   wait: true
   prune: true
 
@@ -57,5 +57,5 @@ spec:
     push:
       branch: develop
   update:
-    path: ./core-sim
+    path: ./coresim
     strategy: Setters
