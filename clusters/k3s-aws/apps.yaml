@@ -27,7 +27,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: vinobank-repo-dev
-  path: ./core-sim/env/dev
+  path: ./transfer-demo/env/dev
   wait: true
   prune: true
 
