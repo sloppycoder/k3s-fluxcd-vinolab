@@ -4,4 +4,4 @@ resources:
   - ../../base
   - ../../optional/github-registry-cred.yaml
   - ../../optional/longhorn-dashboard-ingressroute.yaml
-  - ../../namespaces/bbx-dev
+  - ../../namespaces/edgar
