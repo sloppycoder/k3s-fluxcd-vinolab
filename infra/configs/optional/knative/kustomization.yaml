@@ -8,4 +8,3 @@ resources:
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/mt-channel-broker.yaml
 patches:
   - path: networking-patch.yaml
-  - path: broker-config.yaml
