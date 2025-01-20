@@ -1,0 +1,28 @@
+# for testing only
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minimal-linux-deployment
+  labels:
+    app: minimal-linux
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minimal-linux
+  template:
+    metadata:
+      labels:
+        app: minimal-linux
+    spec:
+      containers:
+      - name: minimal-linux-container
+        image: alpine:latest  # Minimal Linux image
+        command: ["/bin/sh", "-c", "apk add --no-cache curl bash && sleep infinity"]
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
