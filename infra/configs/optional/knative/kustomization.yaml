@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://github.com/knative/serving/releases/download/knative-v1.14.2/serving-core.yaml
+  - https://github.com/knative/eventing/releases/download/knative-v1.14.7/eventing-core.yaml
+  - https://github.com/knative/net-kourier/releases/download/knative-v1.14.0/kourier.yaml
+  - https://github.com/knative/eventing/releases/download/knative-v1.14.7/in-memory-channel.yaml
+  - https://github.com/knative/eventing/releases/download/knative-v1.14.7/mt-channel-broker.yaml
+patches:
+  - target:
+      kind: ConfigMap
+      name: config-network
+      namespace: knative-serving
+    patch: |-
+      - op: replace
+        path: /data/ingress-class
+        value: kourier.ingress.networking.knative.dev

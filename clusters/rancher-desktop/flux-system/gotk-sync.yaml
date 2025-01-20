@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: develop
   secretRef:
     name: flux-system
   url: ssh://git@github.com/sloppycoder/k3s-fluxcd-vinolab
@@ -20,7 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/k3s-aws
+  path: ./clusters/rancher-desktop
   prune: true
   sourceRef:
     kind: GitRepository

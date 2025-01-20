@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/controllers/clusters/k3s-aws
+  path: ./infra/controllers/clusters/rancher-desktop
   prune: true
   wait: true
 
@@ -20,10 +20,10 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - name: infra-controllers
+    - name: infra-controllers
   interval: 10m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/configs/clusters/k3s-aws
+  path: ./infra/configs/clusters/rancher-desktop
   prune: true
