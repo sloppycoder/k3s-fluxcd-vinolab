@@ -6,6 +6,6 @@ resources:
   - https://github.com/knative/net-kourier/releases/download/knative-v1.14.0/kourier.yaml
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/in-memory-channel.yaml
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/mt-channel-broker.yaml
-  - in-memory-broker.yaml
-patchesStrategicMerge:
-  - networking-patch.yaml
+patches:
+  - path: networking-patch.yaml
+  - path: broker-config.yaml
