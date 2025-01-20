@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - ../../base
   - ../../optional/cnpg
-  - ../../optional/knative
+  # - ../../optional/knative
