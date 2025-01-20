@@ -7,4 +7,11 @@ resources:
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/in-memory-channel.yaml
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/mt-channel-broker.yaml
 patches:
-  - path: networking-patch.yaml
+  - target:
+      kind: ConfigMap
+      name: config-network
+      namespace: knative-serving
+    patch: |-
+      - op: replace
+        path: /data/ingress-class
+        value: "kourier.ingress.networking.knative.dev"
