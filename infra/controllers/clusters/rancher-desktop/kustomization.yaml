@@ -4,6 +4,6 @@ resources:
   - ../../base
   # need to run install command before longhorn will work
   # apk add open-iscsi findutils
-  - ../../optional/longhorn
+  # - ../../optional/longhorn
   - ../../optional/cnpg
   - ../../optional/knative
