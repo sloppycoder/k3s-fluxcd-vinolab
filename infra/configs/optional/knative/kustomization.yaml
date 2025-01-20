@@ -4,5 +4,6 @@ resources:
   - https://github.com/knative/serving/releases/download/knative-v1.14.2/serving-core.yaml
   - https://github.com/knative/eventing/releases/download/knative-v1.14.7/eventing-core.yaml
   - https://github.com/knative/net-kourier/releases/download/knative-v1.14.0/kourier.yaml
+  - https://github.com/knative/eventing/releases/download/knative-v1.14.7/in-memory-channel.yaml
 patchesStrategicMerge:
   - networking-patch.yaml
