@@ -4,5 +4,5 @@ resources:
   - https://github.com/knative/serving/releases/download/knative-v1.16.0/serving-crds.yaml
   - https://github.com/knative/serving/releases/download/knative-v1.16.0/serving-core.yaml
   - https://github.com/knative/net-kourier/releases/download/knative-v1.16.0/kourier.yaml
-patchesStrategicMerge:
-  - networking-patch.yaml
+# patchesStrategicMerge:
+#   - networking-patch.yaml
