@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  # with Rancher Desktop, which runs alpoine under the hood, run the following command
+  # before deploying longhorn
+  # apk add open-iscsi findutils
   - https://raw.githubusercontent.com/longhorn/longhorn/v1.7.2/deploy/longhorn.yaml
   - storage-class.yaml
