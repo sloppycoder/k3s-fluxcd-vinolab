@@ -32,30 +32,3 @@ spec:
   path: ./transfer-demo/env/dev
   wait: true
   prune: true
-# ---
-# apiVersion: image.toolkit.fluxcd.io/v1beta1
-# kind: ImageUpdateAutomation
-# metadata:
-#   name: app-vinobank-dev
-#   namespace: vinobank-dev
-# spec:
-#   suspend: false
-#   interval: 1m0s
-#   sourceRef:
-#     kind: GitRepository
-#     name: vinobank-repo-dev
-#     namespace: flux-system
-#   git:
-#     checkout:
-#       ref:
-#         branch: develop
-#     commit:
-#       author:
-#         email: fluxcdbot@users.noreply.github.com
-#         name: fluxcdbot
-#       messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
-#     push:
-#       branch: develop
-#   update:
-#     path: ./transfer-demo
-#     strategy: Setters
