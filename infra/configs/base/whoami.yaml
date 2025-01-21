@@ -5,9 +5,9 @@ metadata:
   namespace: infra
 spec:
   ports:
-  - name: web
-    port: 80
-    targetPort: web
+    - name: web
+      port: 80
+      targetPort: web
   selector:
     app: whoami
 
@@ -27,12 +27,11 @@ spec:
         app: whoami
     spec:
       containers:
-      - name: whoami
-        image: traefik/whoami
-        ports:
-        - name: web
-          containerPort: 80
-
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - name: web
+              containerPort: 80
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -42,7 +41,7 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-    - /whoami
+      - /whoami
     forceSlash: false
 
 ---
@@ -58,16 +57,16 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-issuer
 spec:
   rules:
-  - http:
-      paths:
-      - path: /whoami
-        pathType: Prefix
-        backend:
-          service:
-            name: whoami
-            port:
-              name: web
+    - http:
+        paths:
+          - path: /whoami
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami
+                port:
+                  name: web
   tls:
-  - hosts:
-    - manage.app.vino9.net
-    secretName: manage-app-vino9net-cert
+    - hosts:
+        - manage.app.vino9.net
+      secretName: manage-app-vino9net-cert
