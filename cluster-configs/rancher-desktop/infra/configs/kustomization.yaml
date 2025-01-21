@@ -7,3 +7,4 @@ resources:
   - ../../../../infra/configs/optional/knative-serving
   # - ../../../../infra/configs/optional/knative-eventing
   - ../../../../infra/configs/namespaces/edgar
+  - ../../../../infra/configs/namespaces/vinobank-dev
