@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
   - ../../base
   - ../../optional/github-registry-cred.yaml
+  # - ../../optional/longhorn-dashboard-ingressroute.yaml
   - ../../optional/knative
   - ../../namespaces/edgar

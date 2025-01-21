@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - https://github.com/knative/serving/releases/download/knative-v1.14.2/serving-crds.yaml
-  - https://github.com/knative/eventing/releases/download/knative-v1.14.7/eventing-crds.yaml
+  - https://github.com/knative/serving/releases/download/knative-v1.16.0/serving-crds.yaml
+  # the release yaml contains syntax error, use local patched version until it is fixed
+  # https://github.com/knative/eventing/issues/8412
+  #  - https://github.com/knative/eventing/releases/download/knative-v1.16.3/eventing-crds.yaml
+  - eventing-crds-v1.16.3-patched.yaml
