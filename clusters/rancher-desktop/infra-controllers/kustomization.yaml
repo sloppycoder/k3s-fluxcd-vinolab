@@ -6,4 +6,4 @@ resources:
   # apk add open-iscsi findutils
   # - ../../../infra/controllersoptional/longhorn
   - ../../../infra/controllers/optional/cnpg
-  - ../../../infra/controllers/optional/knative
+  # - ../../../infra/controllers/optional/knative
