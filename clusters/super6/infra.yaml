@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/controllers/clusters/super6
+  path: ./cluster-configs/super6/infra/controllers
   prune: true
   wait: true
 
@@ -20,41 +20,41 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-  - name: infra-controllers
+    - name: infra-controllers
   interval: 10m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/configs/clusters/super6
+  path: ./cluster-configs/super6/infra/configs
   prune: true
   patches:
-  # set cluster name in NewRelic
-  - patch: |
-      - op: replace
-        path: /spec/values/global/cluster
-        value: super6
-    target:
-      kind: HelmRelease
-      name: nri-bundle
-      namespace: infra
-  # add file storage to NATS
-  - patch: |
-      - op: replace
-        path: /spec/valuesContent/nats/fileStorage
-        value:
-          enabled: true
-          size: 2Gi
-          storageDirectory: /data/
-    target:
-      kind: HelmRelease
-      name: nats
-      namespace: infra
-  # use production let's encrypt server
-  - patch: |
-      - op: replace
-        path: /spec/acme/server
-        value: https://acme-v02.api.letsencrypt.org/directory
-    target:
-      kind: ClusterIssuer
-      name: letsencrypt-issuer
-      namespace: infra
+    # set cluster name in NewRelic
+    - patch: |
+        - op: replace
+          path: /spec/values/global/cluster
+          value: super6
+      target:
+        kind: HelmRelease
+        name: nri-bundle
+        namespace: infra
+    # add file storage to NATS
+    - patch: |
+        - op: replace
+          path: /spec/valuesContent/nats/fileStorage
+          value:
+            enabled: true
+            size: 2Gi
+            storageDirectory: /data/
+      target:
+        kind: HelmRelease
+        name: nats
+        namespace: infra
+    # use production let's encrypt server
+    - patch: |
+        - op: replace
+          path: /spec/acme/server
+          value: https://acme-v02.api.letsencrypt.org/directory
+      target:
+        kind: ClusterIssuer
+        name: letsencrypt-issuer
+        namespace: infra
