@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/controllers/clusters/rancher-desktop
+  path: ./cluster-configs/rancher-desktop/infra/controllers
   prune: true
   wait: true
 
@@ -25,5 +25,5 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/configs/clusters/rancher-desktop
+  path: ./cluster-configs/rancher-desktop/infra/configs
   prune: true
