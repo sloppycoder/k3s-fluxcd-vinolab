@@ -7,5 +7,7 @@ resources:
   - ../../../../infra/configs/optional/newrelic.yaml
   - ../../../../infra/configs/optional/github-registry-cred.yaml
   - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
+  - ../../../../infra/configs/optional/knative-serving
+  - ../../../../infra/configs/optional/knative-eventing
   - ../../../../infra/configs/namespaces/vinobank-dev
   - ../../../../infra/configs/namespaces/vinobank
