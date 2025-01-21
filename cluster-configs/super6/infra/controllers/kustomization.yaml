@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../base
-  - ../../../../optional/cert-manager.yaml
-  - ../../../../optional/nfs-subdir-external-provisioner
-  - ../../../../optional/longhorn
-  - ../../../../optional/kubegres
-  - ../../../../optional/nats.yaml
+  - ../../../../infra/controllers/optional/cert-manager.yaml
+  - ../../../../infra/controllers/optional/nfs-subdir-external-provisioner
+  - ../../../../infra/controllers/optional/longhorn
+  - ../../../../infra/controllers/optional/cnpg
+  - ../../../../infra/controllers/optional/nats.yaml
 
 patches:
   - path: patch-nfs-server.yaml

@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../base
-  - ../../../../optional/letsencrypt-cluster-issuer.yaml
-  - ../../../../optional/newrelic.yaml
-  - ../../../../optional/github-registry-cred.yaml
-  - ../../../../optional/longhorn-dashboard-ingressroute.yaml
-  - ../../../../optional/gitops-repo-tokens.yaml
-  - ../../../../namespaces/vinobank-dev
-  - ../../../../namespaces/vinobank
+  - ../../../../infra/configs/optional/longhorn-dashboard-ingressroute.yaml
+  - ../../../../infra/configs/optional/letsencrypt-cluster-issuer.yaml
+  - ../../../../infra/configs/optional/newrelic.yaml
+  - ../../../../infra/configs/optional/github-registry-cred.yaml
+  - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
+  - ../../../../infra/configs/namespaces/vinobank-dev
+  - ../../../../infra/configs/namespaces/vinobank
