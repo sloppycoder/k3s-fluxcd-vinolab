@@ -90,32 +90,3 @@ spec:
   path: ./transfer-demo/env/prod
   wait: true
   prune: true
-
----
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImageUpdateAutomation
-metadata:
-  name: app-vinobank-prod
-  namespace: vinobank
-spec:
-  suspend: false
-  interval: 1m0s
-  sourceRef:
-    kind: GitRepository
-    name: vinobank-repo-main
-    namespace: flux-system
-  git:
-    checkout:
-      ref:
-        branch: main
-    commit:
-      author:
-        email: fluxcdbot@users.noreply.github.com
-        name: fluxcdbot
-      messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
-    push:
-      # an Auto PR github action will raise a PR automatically after push into stage
-      branch: staging
-  update:
-    path: ./transfer-demo
-    strategy: Setters
