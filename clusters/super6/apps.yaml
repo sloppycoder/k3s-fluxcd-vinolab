@@ -2,7 +2,6 @@
 # we'll setup:
 #   one GitRepository pointing to the git branch
 #   one Kustomization using the above GitRepository
-#   one ImageUpdateAutomation if needed
 
 # dev env setup
 apiVersion: source.toolkit.fluxcd.io/v1
