@@ -4,5 +4,5 @@ resources:
   - ../../../infra/configs/base
   - ../../../infra/configs/optional/github-registry-cred.yaml
   # - ../../../infra/configs/optional/longhorn-dashboard-ingressroute.yaml
-  # - ../../../infra/configs/optional/knative
+  - ../../../infra/configs/optional/knative
   - ../../../infra/configs/namespaces/edgar
