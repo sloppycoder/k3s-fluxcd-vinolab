@@ -1,91 +1,91 @@
-# # for each deployment
-# # we'll setup:
-# #   one GitRepository pointing to the git branch
-# #   one Kustomization using the above GitRepository
+# for each deployment
+# we'll setup:
+#   one GitRepository pointing to the git branch
+#   one Kustomization using the above GitRepository
 
-# # dev env setup
-# apiVersion: source.toolkit.fluxcd.io/v1
-# kind: GitRepository
-# metadata:
-#   name: vinobank-repo-dev
-#   namespace: flux-system
-# spec:
-#   interval: 1m0s
-#   url: https://github.com/vino9org/vinobank-gitops
-#   ref:
-#     branch: develop
-#   secretRef:
-#     name: vinobank-repo-token
+# dev env setup
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: vinobank-repo-dev
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  url: https://github.com/vino9org/vinobank-gitops
+  ref:
+    branch: develop
+  secretRef:
+    name: vinobank-repo-token
 
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: app-vinobank-dev
-#   namespace: flux-system
-# spec:
-#   interval: 10m0s
-#   sourceRef:
-#     kind: GitRepository
-#     name: vinobank-repo-dev
-#   path: ./transfer-demo/env/dev
-#   wait: true
-#   prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app-vinobank-dev
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  sourceRef:
+    kind: GitRepository
+    name: vinobank-repo-dev
+  path: ./transfer-demo/env/dev
+  wait: true
+  prune: true
 
-# ---
-# apiVersion: image.toolkit.fluxcd.io/v1beta1
-# kind: ImageUpdateAutomation
-# metadata:
-#   name: app-vinobank-dev
-#   namespace: vinobank-dev
-# spec:
-#   suspend: false
-#   interval: 1m0s
-#   sourceRef:
-#     kind: GitRepository
-#     name: vinobank-repo-dev
-#     namespace: flux-system
-#   git:
-#     checkout:
-#       ref:
-#         branch: develop
-#     commit:
-#       author:
-#         email: fluxcdbot@users.noreply.github.com
-#         name: fluxcdbot
-#       messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
-#     push:
-#       branch: develop
-#   update:
-#     path: ./transfer-demo
-#     strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: app-vinobank-dev
+  namespace: vinobank-dev
+spec:
+  suspend: false
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: vinobank-repo-dev
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: develop
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: develop
+  update:
+    path: ./transfer-demo
+    strategy: Setters
 
-# # prod env setup
-# ---
-# apiVersion: source.toolkit.fluxcd.io/v1
-# kind: GitRepository
-# metadata:
-#   name: vinobank-repo-main
-#   namespace: flux-system
-# spec:
-#   interval: 1m0s
-#   ref:
-#     branch: main
-#   secretRef:
-#     name: vinobank-repo-token
-#   url: https://github.com/vino9org/vinobank-gitops
+# prod env setup
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: vinobank-repo-main
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: vinobank-repo-token
+  url: https://github.com/vino9org/vinobank-gitops
 
-# ---
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: app-vinobank-prod
-#   namespace: flux-system
-# spec:
-#   interval: 10m0s
-#   sourceRef:
-#     kind: GitRepository
-#     name: vinobank-repo-main
-#   path: ./transfer-demo/env/prod
-#   wait: true
-#   prune: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: app-vinobank-prod
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  sourceRef:
+    kind: GitRepository
+    name: vinobank-repo-main
+  path: ./transfer-demo/env/prod
+  wait: true
+  prune: true
