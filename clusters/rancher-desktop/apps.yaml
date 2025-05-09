@@ -11,7 +11,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: https://github.com/vino9org/vinobank-gitops
+  url: https://github.com/vino9net/vinobank-gitops
   ref:
     branch: develop
   secretRef:
