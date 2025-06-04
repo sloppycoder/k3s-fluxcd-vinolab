@@ -12,39 +12,37 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-issuer
     solvers:
-    - dns01:
-        cnameStrategy: Follow
-        route53:
-          region: us-west-2
-          hostedZoneID: Z00868421PWBTNO5RU29G
-          accessKeyIDSecretRef:
-            name: aws-dns-credential
-            key: route53_aws_access_key_id
-          secretAccessKeySecretRef:
-            name: aws-dns-credential
-            key: route53_aws_secret_access_key
-      selector:
-        dnsZones:
-        - "app.vino9.net"
+      - dns01:
+          cnameStrategy: Follow
+          cloudflare:
+            emailSecretRef:
+              name: dns-credential
+              key: cloudflare-email
+            apiTokenSecretRef:
+              name: dns-credential
+              key: cloudflare-api-token
+        selector:
+          dnsZones:
+            - "app.vino9.net"
 
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: aws-dns-credential
+  name: dns-credential
   namespace: infra
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: gcp-secret-manager
   target:
-    name: aws-dns-credential
+    name: dns-credential
   data:
-  - secretKey: route53_aws_access_key_id
-    remoteRef:
-      key: infra-secret
-      property: aws_access_key_id
-  - secretKey: route53_aws_secret_access_key
-    remoteRef:
-      key: infra-secret
-      property: aws_secret_access_key
+    - secretKey: cloudflare-api-token
+      remoteRef:
+        key: infra-secret
+        property: cloudflare_api_token
+    - secretKey: cloudflare-email
+      remoteRef:
+        key: infra-secret
+        property: cloudflare_email
