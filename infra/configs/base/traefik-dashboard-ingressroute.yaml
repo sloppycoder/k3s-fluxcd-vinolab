@@ -1,21 +1,27 @@
 ---
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: traefik-dashboard
   namespace: kube-system
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-traefik-auth@kubernetescrd
 spec:
-  entryPoints:
-    - web
-  routes:
-    - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
-      priority: 90
-      kind: Rule
-      services:
-        - name: api@internal
-          kind: TraefikService
-      middlewares:
-        - name: traefik-auth
+  parentRefs:
+  - name: main-gateway
+    namespace: kube-system
+    sectionName: web
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /dashboard
+    - path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: api@internal
+      kind: TraefikService
 
 ---
 apiVersion: traefik.io/v1alpha1
