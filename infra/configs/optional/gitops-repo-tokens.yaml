@@ -1,4 +1,4 @@
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: vinobank-repo-token
@@ -10,11 +10,11 @@ spec:
   target:
     name: vinobank-repo-token
   data:
-  - secretKey: username
-    remoteRef:
-      key: vinobank-gitops-token
-      property: username
-  - secretKey: password
-    remoteRef:
-      key: vinobank-gitops-token
-      property: password
+    - secretKey: username
+      remoteRef:
+        key: vinobank-gitops-token
+        property: username
+    - secretKey: password
+      remoteRef:
+        key: vinobank-gitops-token
+        property: password

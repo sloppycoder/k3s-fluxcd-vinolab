@@ -45,13 +45,13 @@ spec:
       fluentBit:
         criEnabled: true
   valuesFrom:
-  - kind: Secret
-    name: newrelic-license-key
-    valuesKey: ingestion.key
-    targetPath: global.licenseKey
+    - kind: Secret
+      name: newrelic-license-key
+      valuesKey: ingestion.key
+      targetPath: global.licenseKey
 
 ---
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: newrelic-license-key
@@ -63,7 +63,7 @@ spec:
   target:
     name: newrelic-license-key
   data:
-  - secretKey: ingestion.key
-    remoteRef:
-      key: infra-secret
-      property: newrelic_license_key
+    - secretKey: ingestion.key
+      remoteRef:
+        key: infra-secret
+        property: newrelic_license_key
