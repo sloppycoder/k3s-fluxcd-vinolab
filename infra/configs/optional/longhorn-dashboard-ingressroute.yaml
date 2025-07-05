@@ -9,29 +9,28 @@ spec:
       - /longhorn
 
 ---
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
 metadata:
   name: longhorn-frontend
   namespace: longhorn-system
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: longhorn-system-longhorn-auth@kubernetescrd,longhorn-system-strip-prefix-longhorn-ui@kubernetescrd
 spec:
-  parentRefs:
-  - name: main-gateway
-    namespace: kube-system
-    sectionName: web
-  - name: main-gateway
-    namespace: kube-system
-    sectionName: websecure
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /longhorn
-    backendRefs:
-    - name: longhorn-frontend
-      port: 80
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/longhorn`)
+      priority: 90
+      middlewares:
+        - name: longhorn-auth
+          namespace: longhorn-system
+        - name: strip-prefix-longhorn-ui
+          namespace: longhorn-system
+      services:
+        - kind: Service
+          name: longhorn-frontend
+          port: 80
 
 ---
 apiVersion: traefik.io/v1alpha1
