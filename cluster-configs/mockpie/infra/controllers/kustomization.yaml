@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../infra/controllers/base
+  - ../../../../infra/controllers/optional/cert-manager.yaml
+  - ../../../../infra/controllers/optional/longhorn
+  - ../../../../infra/controllers/optional/cnpg
+  - ../../../../infra/controllers/optional/nats.yaml
+  - ../../../../infra/controllers/optional/knative-serving
