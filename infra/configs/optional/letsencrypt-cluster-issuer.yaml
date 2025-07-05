@@ -15,9 +15,6 @@ spec:
       - dns01:
           cnameStrategy: Follow
           cloudflare:
-            emailSecretRef:
-              name: dns-credential
-              key: cloudflare-email
             apiTokenSecretRef:
               name: dns-credential
               key: cloudflare-api-token
@@ -42,7 +39,3 @@ spec:
       remoteRef:
         key: infra-secret
         property: cloudflare_api_token
-    - secretKey: cloudflare-email
-      remoteRef:
-        key: infra-secret
-        property: cloudflare_email
