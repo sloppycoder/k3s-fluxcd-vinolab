@@ -44,7 +44,7 @@ The following components are managed by FluxCD:
 * [nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner) for using NFS based persistent volumes.
 * [cert-manager](https://cert-manager.io/) setup to works with [Let's Encrpt](https://letsencrypt.org/)
 * [nats streaming](https://nats.io/) light-weigh high performance streaming
-* [Kubegres PostgreSQL operator](https://www.kubegres.io/) for setting up HA PostgreSQL database instances
+* [CloudNativePG PostgreSQL operator](https://cloudnative-pg.io/) for setting up HA PostgreSQL database instances
 * [New Relic](https://newrelic.com) for infra monitoring, mainly for simpler pricing model on data upload, unlike Datadog's convulated licensing model.
 
 ## Boostrap FluxCD in a cluster
@@ -82,4 +82,4 @@ git push
 
 ## Upgrade components
 
-Checkout this repo, update various varion numbers, commit and push. FluxCD will upgrade components according. Follow [this step](https://longhorn.io/docs/1.5.3/deploy/upgrade/upgrade-engine/) after a version upgrade for Longhorn.
+Checkout this repo, update various varion numbers, commit and push. FluxCD will upgrade components according. Follow [this step](https://longhorn.io/docs/1.9.0/deploy/upgrade/upgrade-engine/) after a version upgrade for Longhorn.
