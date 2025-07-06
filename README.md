@@ -83,3 +83,10 @@ git push
 ## Upgrade components
 
 Checkout this repo, update various varion numbers, commit and push. FluxCD will upgrade components according. Follow [this step](https://longhorn.io/docs/1.9.0/deploy/upgrade/upgrade-engine/) after a version upgrade for Longhorn.
+
+## Common Maintanence Commands
+
+1. force external secret sync
+```shell
+kubectl annotate es <name> -n <ns> force-sync=$(date +%s) --overwrite
+```
