@@ -74,7 +74,26 @@ spec:
               kubernetes.io/metadata.name: infra
 
 ---
-# 5. allow egress to hosts external to the cluster
+# 5. allow egress to K8S api server
+# the cidr range is broad, hopefully it works in most setups
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-k8s-api
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.43.0.1/32
+      ports:
+        - protocol: TCP
+          port: 443
+
+---
+# 6. allow egress to hosts external to the cluster
 # the address ranges in except list depends on the cluster
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -88,22 +107,3 @@ spec:
             cidr: 0.0.0.0/0
             except:
               - 10.0.0.0/8
-
----
-# 6. allow egress to K8S api server
-# the cidr range is broad, hopefully it works in most setups
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-k8s-api
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 10.0.0.0/8
-      ports:
-        - protocol: TCP
-          port: 443
