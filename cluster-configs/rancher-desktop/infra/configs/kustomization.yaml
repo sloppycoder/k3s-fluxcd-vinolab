@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../infra/configs/base
-  - ../../../../infra/configs/optional/github-registry-cred.yaml
   - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
   - ../../../../infra/configs/optional/knative-serving
   - ../../../../infra/configs/namespaces/vinobank-dev
