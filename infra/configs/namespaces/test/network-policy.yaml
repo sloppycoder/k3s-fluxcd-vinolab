@@ -90,19 +90,20 @@ spec:
               - 10.0.0.0/8
 
 ---
-# 6. allow egress to pods in cnpg-system
-# this is required for postgres database to communicate with
-# cnpg operator
+# 6. allow egress to K8S api server
+# the cidr range is broad, hopefully it works in most setups
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-to-cnpg
+  name: allow-k8s-api
 spec:
   podSelector: {}
   policyTypes:
     - Egress
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: cnpg-system
+        - ipBlock:
+            cidr: 10.0.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
