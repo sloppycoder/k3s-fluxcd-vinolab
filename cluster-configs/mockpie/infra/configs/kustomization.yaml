@@ -8,4 +8,4 @@ resources:
   - ../../../../infra/configs/optional/github-registry-cred.yaml
   - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
   - ../../../../infra/configs/optional/knative-serving
-  # - ../../../../infra/configs/namespaces/test
+  - ../../../../infra/configs/namespaces/test
