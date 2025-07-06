@@ -5,7 +5,6 @@ resources:
   - ../../../../infra/configs/optional/longhorn-dashboard-ingressroute.yaml
   - ../../../../infra/configs/optional/letsencrypt-cluster-issuer.yaml
   - ../../../../infra/configs/optional/newrelic.yaml
-  - ../../../../infra/configs/optional/github-registry-cred.yaml
   - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
   - ../../../../infra/configs/optional/knative-serving
   - ../../../../infra/configs/namespaces/test
