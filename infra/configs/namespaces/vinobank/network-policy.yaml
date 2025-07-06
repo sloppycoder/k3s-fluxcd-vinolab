@@ -1,3 +1,10 @@
+# by default K3S uses the following IP addresses/ranges
+#  cluster api server, services: 10.43.0.0/16
+#  pods: 10.42.0.0/16
+#  cluster dns: 10.43.0.10
+#
+#  https://docs.k3s.io/cli/server?_highlight=10.43.0#networking
+#
 # 1. pods in same namespace can communicate freely
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -100,7 +107,6 @@ spec:
 
 ---
 # 6. allow egress to hosts external to the cluster
-# the address ranges in except list depends on the cluster
 # *** Keep this policy at the last, since it has a broad blocking of 10.0.0.0/8
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -113,4 +119,5 @@ spec:
         - ipBlock:
             cidr: 0.0.0.0/0
             except:
-              - 10.0.0.0/8
+              - 10.42.0.0/16
+              - 10.43.0.0/16
