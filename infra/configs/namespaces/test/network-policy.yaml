@@ -40,11 +40,11 @@ spec:
           port: 53
 
 ---
-# 3. allow traefik-proxy ingress
+# 3. allow traefik ingress
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-traefik-proxy
+  name: allow-traefik-ingress
 spec:
   ingress:
     - from:
@@ -56,6 +56,24 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: traefik
+
+---
+# 3.1 allow kourier ingress (for knative-serving)
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-kourier-ingress
+spec:
+  ingress:
+    - from:
+        - podSelector: {}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kourier-system
+          podSelector:
+            matchLabels:
+              app: 3scale-kourier-gateway
 
 ---
 # 4. allow ingress and egree for pods in infra and cnpg namespaces
