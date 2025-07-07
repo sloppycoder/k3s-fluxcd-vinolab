@@ -57,7 +57,7 @@ spec:
               app.kubernetes.io/name: traefik
 
 ---
-# 3.2 allow kourier ingress (for knative-serving)
+# 3.2 allow knative-serving
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -69,7 +69,15 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: kourier-system
-          podSelector: {}
+          podSelector:
+            matchLabels:
+              app: 3scale-kourier-gateway
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: knative-serving
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: knative-serving
 
 ---
 # 4.1 allow ingress and egree for pods in infra namespaces
