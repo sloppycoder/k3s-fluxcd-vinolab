@@ -7,4 +7,5 @@ resources:
   - ../../../../infra/controllers/optional/cnpg
   - ../../../../infra/controllers/optional/redis-operator.yaml
   - ../../../../infra/controllers/optional/nats.yaml
-  # - ../../../../infra/controllers/optional/knative-serving
+  - ../../../../infra/controllers/optional/knative-serving
+  - ../../../../infra/controllers/optional/knative-eventing
