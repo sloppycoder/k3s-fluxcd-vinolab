@@ -40,7 +40,7 @@ spec:
           port: 53
 
 ---
-# 3. allow traefik ingress
+# 3.1 allow traefik ingress
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -58,7 +58,7 @@ spec:
               app.kubernetes.io/name: traefik
 
 ---
-# 3.1 allow kourier ingress (for knative-serving)
+# 3.2 allow kourier ingress (for knative-serving)
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -76,8 +76,8 @@ spec:
               app: 3scale-kourier-gateway
 
 ---
-# 4. allow ingress and egree for pods in infra and cnpg namespaces
-#    in order to allow communication with monitoring agents, controllers etc
+# 4.1 allow ingress and egree for pods in infra namespaces
+#    in order to allow communication with monitoring agents etc
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -92,14 +92,31 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: infra
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: cnpg-system
   egress:
     - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: infra
+
+---
+# 4.2 allow ingress and egree for pods in cnpg namespace (for CNPG operator)
+#      enable this if using CNPG to manage PostgreSQL servers
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow--cnpg
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+  egress:
+    - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: cnpg-system
@@ -125,7 +142,7 @@ spec:
 
 ---
 # 6. allow egress to hosts external to the cluster
-# *** Keep this policy at the last, since it has a broad blocking of 10.0.0.0/8
+# *** Keep this policy at the last ***, since it has a broad blocking rules
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
