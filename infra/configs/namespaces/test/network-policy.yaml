@@ -46,9 +46,8 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-traefik-ingress
 spec:
+  podSelector: {}
   ingress:
-    - from:
-        - podSelector: {}
     - from:
         - namespaceSelector:
             matchLabels:
@@ -64,9 +63,8 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-kourier-ingress
 spec:
+  podSelector: {}
   ingress:
-    - from:
-        - podSelector: {}
     - from:
         - namespaceSelector:
             matchLabels:
