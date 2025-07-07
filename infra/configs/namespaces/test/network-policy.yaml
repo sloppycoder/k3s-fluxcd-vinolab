@@ -126,6 +126,23 @@ spec:
               kubernetes.io/metadata.name: cnpg-system
 
 ---
+# 4.3 allow communication with knative-eventing components
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-knative-eventing-ingress
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              eventing.knative.dev/release: "v1.18.2"
+          podSelector:
+            matchLabels:
+              role: broker-filter
+
+---
 # 5. allow egress to K8S api server
 # the cidr range is broad, hopefully it works in most setups
 apiVersion: networking.k8s.io/v1
