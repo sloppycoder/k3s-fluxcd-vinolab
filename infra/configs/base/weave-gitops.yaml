@@ -23,9 +23,8 @@ spec:
         kind: HelmRepository
         name: weave-gitops
       interval: 12h
+  # https://github.com/weaveworks/weave-gitops/blob/main/charts/gitops-server/values.yaml
   values:
-    additionalArgs:
-      - --route-prefix=/gitops
     resources:
       requests:
         cpu: 100m
@@ -73,23 +72,21 @@ spec:
       remoteRef:
         key: infra-secret
         property: gitops_password
-
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+kind: IngressRoute
+apiVersion: traefik.io/v1alpha1
 metadata:
   name: gitops-dashboard
   namespace: flux-system
-  annotations:
-    kubernetes.io/ingress.class: contour
 spec:
-  rules:
-    - http:
-        paths:
-          - path: /gitops
-            pathType: Prefix
-            backend:
-              service:
-                name: weave-gitops
-                port:
-                  number: 9001
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: PathPrefix(`/`)
+      priority: 10
+      services:
+        - kind: Service
+          name: weave-gitops
+          port: 9001
