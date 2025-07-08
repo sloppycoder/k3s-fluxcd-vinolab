@@ -27,7 +27,7 @@ spec:
   values:
     global:
       # cluster name will be patched by kustomize during deployment
-      cluster: rancher-desktop
+      cluster: my-cluster
       lowDataMode: true
     newrelic-infrastructure:
       privileged: true

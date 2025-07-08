@@ -1,7 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ../../../../infra/controllers/base
-  - ../../../../infra/controllers/optional/cnpg
-  - ../../../../infra/controllers/optional/knative-serving
-  # - ../../../../infra/controllers/optional/knative-eventing
