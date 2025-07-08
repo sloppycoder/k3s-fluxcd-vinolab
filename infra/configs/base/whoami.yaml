@@ -32,41 +32,29 @@ spec:
           ports:
             - name: web
               containerPort: 80
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: strip-prefix-whoami
-  namespace: infra
-spec:
-  stripPrefix:
-    prefixes:
-      - /whoami
-    forceSlash: false
-
----
-kind: Ingress
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: whoami
-  namespace: infra
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
-    traefik.ingress.kubernetes.io/router.middlewares: infra-strip-prefix-whoami@kubernetescrd
-    traefik.ingress.kubernetes.io/router.priority: "90"
-    cert-manager.io/cluster-issuer: letsencrypt-issuer
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /whoami
-            pathType: Prefix
-            backend:
-              service:
-                name: whoami
-                port:
-                  name: web
-  tls:
-    - hosts:
-        - manage.app.vino9.net
-      secretName: manage-app-vino9net-cert
+# ---
+# kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: whoami
+#   namespace: infra
+#   annotations:
+#     traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+#     traefik.ingress.kubernetes.io/router.middlewares: infra-strip-prefix-whoami@kubernetescrd
+#     traefik.ingress.kubernetes.io/router.priority: "90"
+#     cert-manager.io/cluster-issuer: letsencrypt-issuer
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /whoami
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: whoami
+#                 port:
+#                   name: web
+#   tls:
+#     - hosts:
+#         - manage.app.vino9.net
+#       secretName: manage-app-vino9net-cert
