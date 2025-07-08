@@ -2,11 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../infra/configs/base
-  - ../../../../infra/configs/optional/longhorn-dashboard-ingressroute.yaml
   - ../../../../infra/configs/optional/letsencrypt-cluster-issuer.yaml
   - ../../../../infra/configs/optional/newrelic.yaml
   - ../../../../infra/configs/optional/gitops-repo-tokens.yaml
   - ../../../../infra/configs/optional/knative-serving
   - ../../../../infra/configs/optional/knative-eventing
-  # - ../../../../infra/configs/namespaces/vinobank-dev
-  # - ../../../../infra/configs/namespaces/vinobank
