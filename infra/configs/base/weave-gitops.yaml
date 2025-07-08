@@ -72,3 +72,23 @@ spec:
       remoteRef:
         key: infra-secret
         property: gitops_password
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitops-dashboard
+  namespace: flux-system
+  annotations:
+    kubernetes.io/ingress.class: contour
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: weave-gitops
+                port:
+                  number: 9001
