@@ -5,6 +5,7 @@
 #
 #  https://docs.k3s.io/cli/server?_highlight=10.43.0#networking
 #
+
 # 1. pods in same namespace can communicate freely
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -23,8 +24,7 @@ spec:
         - podSelector: {}
 
 ---
-# 2. allow pods to access DNS service, the address range
-#    depeonds on the cluster network setup
+# 2.1 allow pods to access cluster DNS service
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -33,66 +33,135 @@ spec:
   podSelector: {}
   egress:
     - to:
-        - ipBlock:
-            cidr: 10.0.0.0/8
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
       ports:
         - protocol: UDP
           port: 53
 
 ---
-# 3.1 allow traefik ingress
+# 2.2 allow egress to K8S api server
+# the cidr range is broad, hopefully it works in most setups
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-k8s-api-egress
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.43.0.1/32
+      ports:
+        - protocol: TCP
+          port: 443
+
+---
+# 3.1 allow contour ingress for regular ingress
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-traefik-ingress
+  name: allow-contour-ingress
 spec:
   podSelector: {}
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
+              kubernetes.io/metadata.name: contour-external
+        - namespaceSelector:
             matchLabels:
-              app.kubernetes.io/name: traefik
+              kubernetes.io/metadata.name: contour-internal
+      ports:
+        - protocol: TCP
+          port: 8080
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 80
 
 ---
-# 3.2 allow knative-serving
+# 3.2 allow knative-serving ingress to query-proxy port 8012
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: allow-knative-serving
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      serving.knative.dev/service:
+  policyTypes:
+    - Ingress
+    - Egress
   ingress:
     - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kourier-system
-          podSelector:
-            matchLabels:
-              app: 3scale-kourier-gateway
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: knative-serving
-          podSelector:
+        - namespaceSelector:
             matchLabels:
-              app.kubernetes.io/name: knative-serving
+              kubernetes.io/metadata.name: contour-external
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: contour-internal
+      ports:
+        - protocol: TCP
+          port: 8012
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: knative-serving
+      ports:
+        - protocol: TCP
+          port: 9090 # autoscaler port?
 
 ---
-# 3.3 allow communication with knative-eventing components
+# 3.3 allow knative-eventing components to POST to app
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-knative-eventing-ingress
+  name: allow-ingress-from-knative-eventing
+  namespace: your-app-namespace
 spec:
   podSelector: {}
+  policyTypes:
+    - Ingress
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: knative-eventing
-          podSelector: {}
+              name: knative-eventing
+      ports:
+        - protocol: TCP
+          port: 8080
+        - protocol: TCP
+          port: 8000
+
+---
+# 3.4 allow app to POST to knative-eventing components
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-knative-eventing
+  namespace: your-app-namespace
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: knative-eventing
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 8080
 
 ---
 # 4.1 allow ingress and egree for pods in infra namespaces
@@ -120,6 +189,7 @@ spec:
 ---
 # 4.2 allow ingress and egree for pods in cnpg namespace
 #      enable this if using CNPG to manage PostgreSQL servers
+# TODO: narrow this down
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -141,26 +211,7 @@ spec:
               kubernetes.io/metadata.name: cnpg-system
 
 ---
-# 5. allow egress to K8S api server
-# the cidr range is broad, hopefully it works in most setups
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-k8s-api-egress
-spec:
-  podSelector: {}
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - ipBlock:
-            cidr: 10.43.0.1/32
-      ports:
-        - protocol: TCP
-          port: 443
-
----
-# 6. allow egress to hosts external to the cluster
+# 9. allow egress to hosts external to the cluster
 # *** Keep this policy at the last ***, since it has a broad blocking rules
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
