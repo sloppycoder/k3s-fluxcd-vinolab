@@ -6,7 +6,6 @@ resources:
   - ../../../../infra/controllers/optional/nfs-subdir-external-provisioner
   - ../../../../infra/controllers/optional/longhorn
   - ../../../../infra/controllers/optional/cnpg
-  - ../../../../infra/controllers/optional/nats.yaml
   - ../../../../infra/controllers/optional/knative-serving
   - ../../../../infra/controllers/optional/knative-eventing
 patches:
