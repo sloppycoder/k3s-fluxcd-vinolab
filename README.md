@@ -31,7 +31,7 @@ Kustomization directory strcture that creates CRDs
 #### [infra/configs](infra/configs)
 
 Infra configurations that depends on CRD in the ```controllers``` direcrory. The directory structure is similiar to ```controllers``` directory.
-The ```namespaces``` diretory cotnains individual namespaces that will be created and their associated configuration, including networkpolicy that blocks communication between namespaces except for ones that runs shared components, e.g. infra. see [an example network policy](infra/configs/namespaces/vinobank/network-policy.yaml) here.
+The ```namespaces``` diretory cotnains individual namespaces that will be created and their associated configuration, including networkpolicy that blocks communication between namespaces except for ones that runs shared components, e.g. infra. see [an example network policy](infra/configs/namespaces/test/network-policy.yaml) here.
 
 The ```clusters``` contains configs for each cluster, each cluster will include configs in ```base``` directory, selected components from ```optional``` directory and selected namespaces that the cluster should host, see [an example cluster config](infra/configs/clusters/super6/kustomization.yaml) here.
 
