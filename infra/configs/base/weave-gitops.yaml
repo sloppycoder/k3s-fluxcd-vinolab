@@ -23,8 +23,9 @@ spec:
         kind: HelmRepository
         name: weave-gitops
       interval: 12h
-  # https://github.com/weaveworks/weave-gitops/blob/main/charts/gitops-server/values.yaml
   values:
+    additionalArgs:
+      - --route-prefix=/gitops
     resources:
       requests:
         cpu: 100m
@@ -85,7 +86,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /gitops
             pathType: Prefix
             backend:
               service:
