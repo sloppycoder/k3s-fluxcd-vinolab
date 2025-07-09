@@ -35,9 +35,8 @@ spec:
     - Egress
   egress:
     - to:
-        - namespaceSelector:
-            matchLabels:
-              name: kube-system
+        - ipBlock:
+            cidr: 10.0.0.0/8
       ports:
         - protocol: UDP
           port: 53
