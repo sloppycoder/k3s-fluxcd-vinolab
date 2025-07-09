@@ -108,8 +108,11 @@ spec:
               kubernetes.io/metadata.name: knative-serving
           podSelector: {}
       ports:
+        # these ports are used by query-proxy
         - protocol: TCP
           port: 8012
+        - protocol: TCP
+          port: 8022
         - protocol: TCP
           port: 9090
 
