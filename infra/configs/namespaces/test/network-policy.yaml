@@ -5,6 +5,7 @@
 #
 #  https://docs.k3s.io/cli/server?_highlight=10.43.0#networking
 #
+
 # 1. pods in same namespace can communicate freely
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
