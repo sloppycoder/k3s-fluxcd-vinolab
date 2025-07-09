@@ -90,8 +90,9 @@ metadata:
   name: allow-knative-serving
 spec:
   podSelector:
-    matchLabels:
-      serving.knative.dev/service:
+    matchExpressions:
+      - key: serving.knative.dev/service
+        operator: Exists
   policyTypes:
     - Ingress
   ingress:
