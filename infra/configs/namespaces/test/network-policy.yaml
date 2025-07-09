@@ -198,6 +198,7 @@ spec:
       cnpg.io/podRole: instance
   policyTypes:
     - Ingress
+    - Egress
   ingress:
     - from:
         - namespaceSelector:
@@ -208,6 +209,11 @@ spec:
           port: 5432
         - protocol: TCP
           port: 8000 # health checks/metrics
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: cnpg-system
 
 ---
 # 4.3 allow redis-operator to reach redis related pods
