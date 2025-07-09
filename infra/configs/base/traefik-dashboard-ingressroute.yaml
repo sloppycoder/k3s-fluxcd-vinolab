@@ -1,3 +1,7 @@
+# the http auth has been commented out.
+# uncomment to restore using http auth to secure traefik dashboard
+# for now we just use Cloudflare Zero Trust and let Cloudflare handle the security.
+
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -14,41 +18,40 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-      middlewares:
-        - name: traefik-auth
+      # middlewares:
+      #   - name: traefik-auth
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: traefik-auth
+#   namespace: kube-system
+# spec:
+#   basicAuth:
+#     secret: dashboard-auth-secret
+#     removeHeader: true
 
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: traefik-auth
-  namespace: kube-system
-spec:
-  basicAuth:
-    secret: dashboard-auth-secret
-    removeHeader: true
-
----
-# to create htpasswd file,
-#   htpasswd -c htpasswd username
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: dashboard-auth-secret
-  namespace: kube-system
-spec:
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: gcp-secret-manager
-  target:
-    name: dashboard-auth-secret
-    template:
-      type: Opaque
-      data:
-        htpasswd: |
-          {{ .htpasswd }}
-  data:
-    - secretKey: htpasswd
-      remoteRef:
-        key: infra-secret
-        property: console_htpasswd
+# ---
+# # to create htpasswd file,
+# #   htpasswd -c htpasswd username
+# apiVersion: external-secrets.io/v1
+# kind: ExternalSecret
+# metadata:
+#   name: dashboard-auth-secret
+#   namespace: kube-system
+# spec:
+#   secretStoreRef:
+#     kind: ClusterSecretStore
+#     name: gcp-secret-manager
+#   target:
+#     name: dashboard-auth-secret
+#     template:
+#       type: Opaque
+#       data:
+#         htpasswd: |
+#           {{ .htpasswd }}
+#   data:
+#     - secretKey: htpasswd
+#       remoteRef:
+#         key: infra-secret
+#         property: console_htpasswd
