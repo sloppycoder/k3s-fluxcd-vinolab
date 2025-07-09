@@ -164,7 +164,8 @@ spec:
 
 ---
 # 4.1 allow ingress and egree for pods in infra namespaces
-#    in order to allow communication with monitoring agents etc
+#   in order to allow communication with monitoring agents etc
+#   for the moment cnpg-system is treated as infra, will refine later
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -179,66 +180,17 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: infra
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
   egress:
     - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: infra
-
----
-# 4.2 allow ingress and egree for pods in cnpg namespace
-#     enable this if using CNPG to manage PostgreSQL servers
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-cnpg-operator
-spec:
-  podSelector:
-    matchLabels:
-      cnpg.io/podRole: instance
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
         - namespaceSelector:
             matchLabels:
-              name: cnpg-system
-      ports:
-        - protocol: TCP
-          port: 5432
-        - protocol: TCP
-          port: 8000 # health checks/metrics
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              name: cnpg-system
-
----
-# 4.3 allow redis-operator to reach redis related pods
-#     not needed for now since it runs in infra namespace
-#     which can communicate freely
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: allow-redis-operator
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app: redis
-#   policyTypes:
-#     - Ingress
-#   ingress:
-#     - from:
-#         - namespaceSelector:
-#             matchLabels:
-#               name: infra
-#       ports:
-#         - protocol: TCP
-#           port: 6379 # Redis port
-#         - protocol: TCP
-#           port: 9121 # Redis exporter (if metrics enabled)
+              kubernetes.io/metadata.name: cnpg-system
 
 ---
 # 9. allow egress to hosts external to the cluster
