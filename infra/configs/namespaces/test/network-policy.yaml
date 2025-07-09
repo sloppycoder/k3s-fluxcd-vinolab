@@ -94,7 +94,6 @@ spec:
       serving.knative.dev/service:
   policyTypes:
     - Ingress
-    - Egress
   ingress:
     - from:
         - namespaceSelector:
@@ -110,14 +109,8 @@ spec:
       ports:
         - protocol: TCP
           port: 8012
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              name: knative-serving
-      ports:
         - protocol: TCP
-          port: 9090 # autoscaler port?
+          port: 9090
 
 ---
 # 3.3 allow knative-eventing components to POST to app
