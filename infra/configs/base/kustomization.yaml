@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - gcp-secret-store.yaml
   - traefik-dashboard-ingressroute.yaml
-  - weave-gitops.yaml
+  #  - weave-gitops.yaml
   - whoami.yaml
