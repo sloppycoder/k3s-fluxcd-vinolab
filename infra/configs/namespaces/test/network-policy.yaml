@@ -31,6 +31,8 @@ metadata:
   name: allow-dns
 spec:
   podSelector: {}
+  policyTypes:
+    - Egress
   egress:
     - to:
         - namespaceSelector:
@@ -60,31 +62,28 @@ spec:
           port: 443
 
 ---
-# 3.1 allow contour ingress for regular ingress
+# 3.1 allow traefik ingress
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-contour-ingress
+  name: allow-traefik-ingress
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      local.dev/pod-type: app
+  policyTypes:
+    - Ingress
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: contour-external
-        - namespaceSelector:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
             matchLabels:
-              kubernetes.io/metadata.name: contour-internal
-      ports:
-        - protocol: TCP
-          port: 8080
-        - protocol: TCP
-          port: 8000
-        - protocol: TCP
-          port: 80
+              app.kubernetes.io/name: traefik
 
 ---
-# 3.2 allow knative-serving ingress to query-proxy port 8012
+# 3.2 allow knative-serving
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -100,13 +99,14 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
+              kubernetes.io/metadata.name: kourier-system
+          podSelector:
+            matchLabels:
+              app: 3scale-kourier-gateway
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: knative-serving
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: contour-external
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: contour-internal
+          podSelector: {}
       ports:
         - protocol: TCP
           port: 8012
@@ -125,9 +125,9 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-ingress-from-knative-eventing
-  namespace: your-app-namespace
 spec:
-  podSelector: {}
+  podSelector:
+    local.dev/pod-type: app
   policyTypes:
     - Ingress
   ingress:
@@ -142,14 +142,14 @@ spec:
           port: 8000
 
 ---
-# 3.4 allow app to POST to knative-eventing components
+# 3.4 allow app to POST to knative-eventing components, e.g. broker
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-egress-to-knative-eventing
-  namespace: your-app-namespace
 spec:
-  podSelector: {}
+  podSelector:
+    local.dev/pod-type: app
   policyTypes:
     - Egress
   egress:
@@ -165,7 +165,8 @@ spec:
 
 ---
 # 4.1 allow ingress and egree for pods in infra namespaces
-#    in order to allow communication with monitoring agents etc
+#   in order to allow communication with monitoring agents etc
+#   for the moment cnpg-system is treated as infra, will refine later
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -180,32 +181,14 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: infra
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: infra
-
----
-# 4.2 allow ingress and egree for pods in cnpg namespace
-#      enable this if using CNPG to manage PostgreSQL servers
-# TODO: narrow this down
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-cnpg
-spec:
-  podSelector: {}
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: cnpg-system
   egress:
     - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: infra
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: cnpg-system
@@ -219,6 +202,8 @@ metadata:
   name: allow-cluster-external-egress
 spec:
   podSelector: {}
+  policyTypes:
+    - Egress
   egress:
     - to:
         - ipBlock:
