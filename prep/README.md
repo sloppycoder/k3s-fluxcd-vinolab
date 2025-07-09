@@ -19,6 +19,11 @@ kubectl apply -f gcpsm-secret.yaml -n infra
 
 # create a ```infra_secret.json``` based on template in ```infra-secret-sample.json```, then
 
+# create new secret
 gcloud secrets create infra-secret --project project_id --data-file=infra-secret.json
+
+# add a new revision
+gcloud secrets versions add infra-secret --project project_id --data-file=infra-secret.json
+
 
 ```
