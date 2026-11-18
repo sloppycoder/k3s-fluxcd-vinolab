@@ -4,7 +4,7 @@ This repo contains the [FluxCD](https://fluxcd.io) setup for my homelab K3S clus
 
 ## Pending work
 
-Infrastructure and Helm releases reconcile on local OrbStack; the original `testfunc` passes PostgreSQL, Redis, and CloudEvent tests. `app-infra-test` is still reconciling at the latest check.
+Infrastructure and Helm releases reconcile on local OrbStack; the original `testfunc` passes PostgreSQL, Redis, and CloudEvent tests. All four local Flux Kustomizations, including `app-infra-test`, are now Ready.
 
 * Restore normal image automation: refresh the rejected GitHub write credential in GCP `vinobank-gitops-token`, restore authenticated Git access, and remove the temporary suspension, image override, and readiness workaround. Verify build → image detection → Git commit → deployment.
 * Confirm development hostnames and Cloudflare Access policies, then publish and test the Ingress routes. The tunnel is connected; no public routes exist yet.
@@ -86,7 +86,7 @@ GCP Secret Manager and Cloudflare Zero Trust are external service integrations w
 
 ### Local test environment
 
-OrbStack **2.2.5** runs Kubernetes **1.36.5+orb1** on ARM64 here. Its host has neither `iscsiadm` nor `iscsid`, and no loaded `iscsi_tcp` module was found. The mockpie overlay therefore does not select Longhorn; its shared manifest is upgraded for super6, but Longhorn storage operations are **not tested locally**. Local PVC smoke tests use OrbStack's available storage provisioner. The mockpie NetworkPolicy overrides match this node's pod/service range (`192.168.194.0/24`) and API endpoint (`192.168.139.2:26443`); verify those addresses again if the local cluster is recreated.
+OrbStack **2.2.5** runs Kubernetes **1.36.5+orb1** on ARM64 here. Its managed host has neither `iscsiadm` nor `iscsid`, and no normal `apt`/`apk` package manager. A deeper inspection confirmed that `iscsi_tcp.ko` and its dependencies **are available**, but not loaded; missing kernel support was not established. [OrbStack added iSCSI kernel support in 1.11.0](https://github.com/orbstack/orbstack/issues/1841). A privileged Docker/`nsenter` shell reaches the managed host; documented `orb`/SSH machine access reaches separate Linux userspaces, so installing packages there does not equip the managed Kubernetes node. Host userspace/daemon setup remains untested. The mockpie overlay therefore still does not select Longhorn; its shared manifest is upgraded for super6, but Longhorn storage operations are **not tested locally**. Local PVC smoke tests use OrbStack's available storage provisioner. The mockpie NetworkPolicy overrides match this node's pod/service range (`192.168.194.0/24`) and API endpoint (`192.168.139.2:26443`); verify those addresses again if the local cluster is recreated.
 
 The local Flux source and external application source read their public repositories over HTTPS without a deploy key. The old GCP application-repository credential was rejected and is not used by the local source. metrics-server is included locally for Knative HPAs; its development-only patch accepts OrbStack's kubelet certificate without verification. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is temporarily suspended; restoring the normal workflow remains pending. Its source files remain in the external repository.
 
