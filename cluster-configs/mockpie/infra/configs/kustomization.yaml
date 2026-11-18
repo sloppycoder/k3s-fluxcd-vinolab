@@ -6,3 +6,48 @@ resources:
   - ../../../../infra/configs/optional/knative-serving
   - ../../../../infra/configs/optional/knative-eventing
   - ../../../../infra/configs/namespaces/test
+# OrbStack uses different addresses from the default K3s 10.42/10.43 ranges.
+patches:
+  - target:
+      kind: NetworkPolicy
+      name: allow-dns
+      namespace: test
+    patch: |-
+      - op: replace
+        path: /spec/egress/0/to
+        value:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+  - target:
+      kind: NetworkPolicy
+      name: allow-k8s-api-egress
+      namespace: test
+    patch: |-
+      - op: replace
+        path: /spec/egress
+        value:
+          - to:
+              - ipBlock:
+                  cidr: 192.168.194.129/32
+            ports:
+              - protocol: TCP
+                port: 443
+          - to:
+              - ipBlock:
+                  cidr: 192.168.139.2/32
+            ports:
+              - protocol: TCP
+                port: 26443
+  - target:
+      kind: NetworkPolicy
+      name: allow-cluster-external-egress
+      namespace: test
+    patch: |-
+      - op: replace
+        path: /spec/egress/0/to/0/ipBlock/except
+        value:
+          - 192.168.194.0/24

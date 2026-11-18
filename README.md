@@ -42,21 +42,23 @@ Versions below describe the checked-in manifests, not an inspection of a running
 | Component / purpose | Version in this repo | Selected by | Latest verified stable version / source |
 | --- | --- | --- | --- |
 | FluxCD — GitOps controllers | Bundle **2.10.0** | Both clusters | [2.10.0](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) |
-| External Secrets Operator — GCP Secret Manager sync | Chart/app **0.18.2** | Both, [base](infra/controllers/base/external-secrets.yaml) | Chart/app [2.15.0](https://charts.external-secrets.io/index.yaml) |
-| Longhorn — persistent block storage | **1.9.0** | Both, [manifest](infra/controllers/optional/longhorn/kustomization.yaml) | [1.13.0](https://github.com/longhorn/longhorn/releases/tag/v1.13.0) |
-| CloudNativePG — PostgreSQL operator | **1.26.0** | Both, [manifest](infra/controllers/optional/cnpg/kustomization.yaml) | [1.30.2](https://github.com/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.2) |
-| Knative Serving — serverless workloads | **1.18.1**, CRDs and core | Both, [CRDs](infra/controllers/optional/knative-serving/kustomization.yaml), [core](infra/configs/optional/knative-serving/kustomization.yaml) | [1.24.0](https://github.com/knative/serving/releases/tag/knative-v1.24.0) |
-| Kourier — ingress for Knative Serving | **1.18.0** | Both, [manifest](infra/configs/optional/knative-serving/kustomization.yaml) | [1.24.0](https://github.com/knative-extensions/net-kourier/releases/tag/knative-v1.24.0) |
-| Knative Eventing — events, in-memory channels, channel broker | **1.18.2**, CRDs and core/plugins | Both, [CRDs](infra/controllers/optional/knative-eventing/kustomization.yaml), [core/plugins](infra/configs/optional/knative-eventing/kustomization.yaml) | [1.24.0](https://github.com/knative/eventing/releases/tag/knative-v1.24.0) |
+| External Secrets Operator — GCP Secret Manager sync | Chart/app **2.15.0** | Both, [base](infra/controllers/base/external-secrets.yaml) | Chart/app [2.15.0](https://charts.external-secrets.io/index.yaml) |
+| Longhorn — persistent block storage | **1.13.0** | super6; skipped on OrbStack, [manifest](infra/controllers/optional/longhorn/kustomization.yaml) | [1.13.0](https://github.com/longhorn/longhorn/releases/tag/v1.13.0) |
+| CloudNativePG — PostgreSQL operator | **1.30.2** | Both, [manifest](infra/controllers/optional/cnpg/kustomization.yaml) | [1.30.2](https://github.com/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.2) |
+| Knative Serving — serverless workloads | **1.24.0**, CRDs and core | Both, [CRDs](infra/controllers/optional/knative-serving/kustomization.yaml), [core](infra/configs/optional/knative-serving/kustomization.yaml) | [1.24.0](https://github.com/knative/serving/releases/tag/knative-v1.24.0) |
+| Kourier — ingress for Knative Serving | **1.24.0** | Both, [manifest](infra/configs/optional/knative-serving/kustomization.yaml) | [1.24.0](https://github.com/knative-extensions/net-kourier/releases/tag/knative-v1.24.0) |
+| Knative Eventing — events, in-memory channels, channel broker | **1.24.0**, CRDs and core/plugins | Both, [CRDs](infra/controllers/optional/knative-eventing/kustomization.yaml), [core/plugins](infra/configs/optional/knative-eventing/kustomization.yaml) | [1.24.0](https://github.com/knative/eventing/releases/tag/knative-v1.24.0) |
 | Weave GitOps — Flux dashboard | Chart **4.0.36**, app **0.38.0** | Both, [manifest](infra/configs/base/weave-gitops.yaml) | Stable chart **4.0.36**, app **0.38.0**; [OCI registry](https://github.com/weaveworks/weave-gitops/pkgs/container/charts%2Fweave-gitops). The newer app tag `0.39.1-rc.1` is a release candidate. |
-| NFS subdirectory provisioner — existing NFS server volumes | **Unpinned remote deploy directory**; currently upstream uses image **4.0.2** | super6 only, [manifest](infra/controllers/optional/nfs-subdir-external-provisioner/kustomization.yaml) | Latest [chart release 4.0.18](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/releases/tag/nfs-subdir-external-provisioner-4.0.18); [deploy image 4.0.2](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/deploy/deployment.yaml). Chart and image numbers differ. |
-| Redis Operator (OT-CONTAINER-KIT) | Chart/app **0.21.0** | mockpie only, [manifest](infra/controllers/optional/redis-operator.yaml) | Chart/app [0.27.0](https://ot-container-kit.github.io/helm-charts/index.yaml) |
-| NATS — messaging with JetStream | Chart **1.3.9**, server **2.11.6** | Available, **neither cluster selects it**; [manifest](infra/controllers/optional/nats.yaml) | Chart/server [2.15.2](https://nats-io.github.io/k8s/helm/charts/index.yaml) |
-| NACK — NATS JetStream controller | Chart **0.25.1**, app **0.14.1** | Available alongside NATS, **not selected** | Chart **0.35.0**, app **0.24.0**; [index](https://nats-io.github.io/k8s/helm/charts/index.yaml) |
-| Traefik whoami — ingress test service | `traefik/whoami`, **no tag** (implicit `latest`) | Both, [manifest](infra/configs/base/whoami.yaml) | [1.12.0](https://github.com/traefik/whoami/releases/tag/v1.12.0) |
-| Alpine Linux — debug deployment | `alpine:latest`, **not pinned** | Available, **not selected**; [manifest](infra/configs/optional/alpine-linux.yaml) | [3.24.4](https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/latest-releases.yaml) |
+| NFS subdirectory provisioner — existing NFS server volumes | Deploy revision **`05abcf2e07f5`**, image **4.0.2** | super6 only, [manifest](infra/controllers/optional/nfs-subdir-external-provisioner/kustomization.yaml) | Latest [chart release 4.0.18](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/releases/tag/nfs-subdir-external-provisioner-4.0.18); [deploy image 4.0.2](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/blob/master/deploy/deployment.yaml). Chart and image numbers differ. |
+| Redis Operator (OT-CONTAINER-KIT) | Chart/app **0.27.0** | mockpie only, [manifest](infra/controllers/optional/redis-operator.yaml) | Chart/app [0.27.0](https://ot-container-kit.github.io/helm-charts/index.yaml) |
+| NATS — messaging with JetStream | Chart **2.15.2**, server **2.15.2** | Available, **neither cluster selects it**; [manifest](infra/controllers/optional/nats.yaml) | Chart/server [2.15.2](https://nats-io.github.io/k8s/helm/charts/index.yaml) |
+| NACK — NATS JetStream controller | Chart **0.35.0**, app **0.24.0** | Available alongside NATS, **not selected** | Chart **0.35.0**, app **0.24.0**; [index](https://nats-io.github.io/k8s/helm/charts/index.yaml) |
+| Traefik whoami — ingress test service | `traefik/whoami:v1.12.0` | Both, [manifest](infra/configs/base/whoami.yaml) | [1.12.0](https://github.com/traefik/whoami/releases/tag/v1.12.0) |
+| Alpine Linux — debug deployment | `alpine:3.24.4` | Available, **not selected**; [manifest](infra/configs/optional/alpine-linux.yaml) | [3.24.4](https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/latest-releases.yaml) |
 | K3s / Kubernetes — underlying cluster | **Not pinned or installed here**; managed outside this repo | Both clusters | Latest published [K3s 1.37.2+k3s1](https://github.com/k3s-io/k3s/releases/tag/v1.37.2%2Bk3s1); choose a supported upgrade path for the actual installed version |
 | Traefik — ingress and dashboards | **Not pinned or installed here**; routes assume it exists | Both clusters | Upstream [3.7.19](https://github.com/traefik/traefik/releases/tag/v3.7.19); use the version compatible with the selected K3s release |
+
+The optional NATS release uses current `config.jetstream` chart values and remains memory-only until persistent storage is explicitly configured. It and NACK are not enabled by either overlay.
 
 Both clusters contain the same Flux bundle and controller image pins:
 
@@ -72,6 +74,14 @@ Both clusters contain the same Flux bundle and controller image pins:
 These are a bundle: regenerate each cluster's `gotk-components.yaml` with the target Flux CLI rather than independently upgrading controller images. The [Flux 2.10.0 release notes](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) list its matching controller versions.
 
 GCP Secret Manager and Cloudflare Zero Trust are external service integrations with no package version pinned here. Application and database instance versions in the external `vinobank-gitops` repository are outside this inventory; the CloudNativePG and Redis entries above are operator versions.
+
+### Local test environment
+
+OrbStack **2.2.5** runs Kubernetes **1.36.5+orb1** on ARM64 here. Its host has neither `iscsiadm` nor `iscsid`, and no loaded `iscsi_tcp` module was found. The mockpie overlay therefore does not select Longhorn; its shared manifest is upgraded for super6, but Longhorn storage operations are **not tested locally**. Local PVC smoke tests use OrbStack's available storage provisioner. The mockpie NetworkPolicy overrides match this node's pod/service range (`192.168.194.0/24`) and API endpoint (`192.168.139.2:26443`); verify those addresses again if the local cluster is recreated.
+
+The local Flux source reads this public repository over HTTPS without a deploy key. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is suspended for testing. Its source files remain in the external repository.
+
+Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before reconciling External Secrets; never commit this credential file.
 
 ### Certificate and ingress transition
 

@@ -125,7 +125,8 @@ metadata:
   name: allow-ingress-from-knative-eventing
 spec:
   podSelector:
-    local.dev/pod-type: app
+    matchLabels:
+      local.dev/pod-type: app
   policyTypes:
     - Ingress
   ingress:
@@ -147,7 +148,8 @@ metadata:
   name: allow-egress-to-knative-eventing
 spec:
   podSelector:
-    local.dev/pod-type: app
+    matchLabels:
+      local.dev/pod-type: app
   policyTypes:
     - Egress
   egress:

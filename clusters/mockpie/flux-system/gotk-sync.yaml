@@ -9,9 +9,7 @@ spec:
   interval: 1m0s
   ref:
     branch: develop
-  secretRef:
-    name: flux-system
-  url: ssh://git@github.com/sloppycoder/k3s-fluxcd-vinolab
+  url: https://github.com/sloppycoder/k3s-fluxcd-vinolab.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

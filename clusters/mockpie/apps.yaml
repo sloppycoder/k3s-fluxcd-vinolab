@@ -30,3 +30,33 @@ spec:
   path: ./infra-test/env/dev
   wait: true
   prune: true
+  # The application repo still has removed Flux beta APIs. Migrate the rendered
+  # test resources here and disable writes back to that external repository.
+  patches:
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImageUpdateAutomation
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1
+        - op: replace
+          path: /spec/suspend
+          value: true
+        - op: replace
+          path: /spec/git/commit/messageTemplate
+          value: Update infrastructure test images
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImageRepository
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImagePolicy
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1

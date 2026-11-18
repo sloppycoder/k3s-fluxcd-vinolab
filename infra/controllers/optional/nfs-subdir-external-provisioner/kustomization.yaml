@@ -2,6 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - github.com/kubernetes-sigs/nfs-subdir-external-provisioner/deploy
+  - https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner//deploy?ref=05abcf2e07f5f121e313f531c03bd5ccccbe6c9b
 
 namespace: infra
