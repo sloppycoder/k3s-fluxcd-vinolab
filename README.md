@@ -7,7 +7,7 @@ This repo contains the [FluxCD](https://fluxcd.io) setup for my homelab K3S clus
 Infrastructure and Helm releases reconcile on local OrbStack; the original `testfunc` passes PostgreSQL, Redis, and CloudEvent tests. All four local Flux Kustomizations, including `app-infra-test`, are now Ready.
 
 * Restore normal image automation: refresh the rejected GitHub write credential in GCP `vinobank-gitops-token`, restore authenticated Git access, and remove the temporary suspension, image override, and readiness workaround. Verify build → image detection → Git commit → deployment.
-* Publish and test additional development Ingress routes after confirming hostnames and Cloudflare Access policies. mockpie selects the public `whoami-dev.kube.vino9.net` test route; dashboards remain internal.
+* Publish and test additional development Ingress routes after confirming hostnames and Cloudflare Access policies. mockpie selects the public `kube-whoami-dev.vino9.net` test route; dashboards remain internal.
 * Resurrect super6 and validate its Longhorn/NFS storage and hardware before discussing the merge into `main`. Longhorn was upgraded but not tested locally.
 
 ## Design principles for GitOps
@@ -105,7 +105,7 @@ Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before rec
 | Weave GitOps | Deployment ready and web page returns HTTP 200; authenticated API compatibility is not fully verified |
 | Longhorn / NFS provisioner | Not runtime-tested on OrbStack; super6 manifests render |
 | Original `testfunc` application | Rebuilt public ARM64/AMD64 image; PostgreSQL and Redis checks pass; direct CloudEvent requests return pong and broker/Trigger delivery is verified. Image repository and policy scans are ready. |
-| Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. mockpie selects `whoami-dev.kube.vino9.net`; public HTTPS verification is pending. |
+| Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. mockpie selects `kube-whoami-dev.vino9.net`; public HTTPS verification is pending. |
 
 The independent Knative receiver/Trigger were temporary test resources used before the original application image was rebuilt. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Additional Cloudflare routes and authentication require testing once hostnames and Access policies are confirmed.
 
@@ -121,7 +121,7 @@ The old deployment tag was unavailable. The existing [manual build workflow](htt
 
 ### Certificate and ingress transition
 
-cert-manager (previously 1.18.2), the Let's Encrypt issuer, its Cloudflare DNS credential sync, and the whoami certificate request have been removed. No external-dns deployment existed in this repository. External Secrets Operator remains enabled. Traefik-specific dashboard routes and middleware are removed; no Traefik controller is required. Kourier remains the Knative ingress. mockpie publishes whoami at `whoami-dev.kube.vino9.net` through Cloudflare Tunnel as a public test endpoint. Weave remains internal until its hostname and Access protection are confirmed. Local tests can use direct Service access or port forwarding.
+cert-manager (previously 1.18.2), the Let's Encrypt issuer, its Cloudflare DNS credential sync, and the whoami certificate request have been removed. No external-dns deployment existed in this repository. External Secrets Operator remains enabled. Traefik-specific dashboard routes and middleware are removed; no Traefik controller is required. Kourier remains the Knative ingress. mockpie publishes whoami at `kube-whoami-dev.vino9.net` through Cloudflare Tunnel as a public test endpoint. Weave remains internal until its hostname and Access protection are confirmed. Local tests can use direct Service access or port forwarding.
 
 The STRRL controller uses the explicit `cloudflare-tunnel` IngressClass and manages separate tunnels: `k3s-mockpie-dev` locally and `k3s-super6` for super6. It is selected with infra configurations, after External Secrets, to avoid a controller/credential dependency cycle. Credentials come from `infra-secret.cloudflare_api_token` and `infra-secret.cloudflare_account_id` in GCP Secret Manager; External Secrets creates `infra/cloudflare-tunnel-credentials`. Neither value is embedded in the repository. An Ingress publishes a service but does not create Cloudflare Access applications/policies: configure those before selecting any dashboard Ingress.
 

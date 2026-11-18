@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: cloudflare-tunnel
   rules:
-    - host: whoami-dev.kube.vino9.net
+    - host: kube-whoami-dev.vino9.net
       http:
         paths:
           - path: /
