@@ -96,10 +96,20 @@ Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before rec
 | Knative Eventing | Synthetic event traverses the default broker and a Trigger; receiver logs confirm delivery |
 | Weave GitOps | Deployment ready and web page returns HTTP 200; authenticated API compatibility is not fully verified |
 | Longhorn / NFS provisioner | Not runtime-tested on OrbStack; super6 manifests render |
-| Legacy external `testfunc` application | Blocked: referenced GHCR tag/package is unavailable; image scan is denied. The source can be fetched, but this app Kustomization cannot become fully ready. |
+| Original `testfunc` application | Rebuilt public ARM64/AMD64 image; PostgreSQL and Redis checks pass; direct CloudEvent requests return pong and broker/Trigger delivery is verified. Image repository and policy scans are ready. |
 | Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. No public Ingress routes configured. |
 
 The independent Knative receiver/Trigger were temporary test resources, separate from the unavailable application image. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Cloudflare routes and authentication require a subsequent test once hostnames, token permissions, and Access policies are confirmed.
+
+### Infrastructure test workload
+
+The external `vinobank-gitops/infra-test` overlay deploys PostgreSQL, Redis, a helper pod, and the original [`testfunc`](https://github.com/sloppycoder/testfunc/blob/main/main.py) Knative workload. Its endpoints are:
+
+* `GET /`: a simple running response.
+* `GET /check`: connect to PostgreSQL and count public-schema tables, then write/read/delete a temporary Redis key. `?source=db` or `?source=redis` selects one check.
+* `POST /`: receive and log a CloudEvent, then return a `dev.vino9.infra.test.infra.pong` reply event.
+
+The old deployment tag was unavailable. The existing [manual build workflow](https://github.com/sloppycoder/testfunc/actions/runs/44266223434) was triggered without changing the source repository, publishing the public multi-architecture tag `main-20261118-162131-705da03`. The local Flux Kustomization overrides the stale external pin with that tag and immutable digest `sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b`. No replacement workload was needed. The intentionally suspended Git-write automation has an explicit health expression so it does not block the other runtime health checks.
 
 ### Certificate and ingress transition
 

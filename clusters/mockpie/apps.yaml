@@ -26,8 +26,24 @@ spec:
     kind: GitRepository
     name: vinobank-repo-dev
   path: ./infra-test/env/dev
+  dependsOn:
+    - name: infra-configs
+  # Rebuilt from the original source using its existing manual CI workflow.
+  images:
+    - name: ghcr.io/sloppycoder/testfunc
+      newTag: main-20261118-162131-705da03
+      digest: sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b
   wait: true
   prune: true
+  # Paused Git-write automation is intentional during local testing. Continue
+  # checking all other resources without waiting for that controller to run.
+  healthCheckExprs:
+    - apiVersion: image.toolkit.fluxcd.io/v1
+      kind: ImageUpdateAutomation
+      current: >-
+        (has(spec.suspend) && spec.suspend) ||
+        (has(status.conditions) &&
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'))
   # The application repo still has removed Flux beta APIs. Migrate the rendered
   # test resources here and disable writes back to that external repository.
   patches:
