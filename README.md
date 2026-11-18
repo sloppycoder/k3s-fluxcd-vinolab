@@ -43,7 +43,6 @@ Versions below describe the checked-in manifests, not an inspection of a running
 | --- | --- | --- | --- |
 | FluxCD — GitOps controllers | Bundle **2.10.0** | Both clusters | [2.10.0](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) |
 | External Secrets Operator — GCP Secret Manager sync | Chart/app **0.18.2** | Both, [base](infra/controllers/base/external-secrets.yaml) | Chart/app [2.15.0](https://charts.external-secrets.io/index.yaml) |
-| cert-manager — ACME certificates with Cloudflare DNS | Chart/app **1.18.2** | Both, [manifest](infra/controllers/optional/cert-manager.yaml) | Chart/app [1.21.3](https://charts.jetstack.io/index.yaml) |
 | Longhorn — persistent block storage | **1.9.0** | Both, [manifest](infra/controllers/optional/longhorn/kustomization.yaml) | [1.13.0](https://github.com/longhorn/longhorn/releases/tag/v1.13.0) |
 | CloudNativePG — PostgreSQL operator | **1.26.0** | Both, [manifest](infra/controllers/optional/cnpg/kustomization.yaml) | [1.30.2](https://github.com/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.2) |
 | Knative Serving — serverless workloads | **1.18.1**, CRDs and core | Both, [CRDs](infra/controllers/optional/knative-serving/kustomization.yaml), [core](infra/configs/optional/knative-serving/kustomization.yaml) | [1.24.0](https://github.com/knative/serving/releases/tag/knative-v1.24.0) |
@@ -72,7 +71,11 @@ Both clusters contain the same Flux bundle and controller image pins:
 
 These are a bundle: regenerate each cluster's `gotk-components.yaml` with the target Flux CLI rather than independently upgrading controller images. The [Flux 2.10.0 release notes](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) list its matching controller versions.
 
-GCP Secret Manager, Cloudflare DNS/Zero Trust, and Let's Encrypt are external service integrations with no package version pinned here. Application and database instance versions in the external `vinobank-gitops` repository are outside this inventory; the CloudNativePG and Redis entries above are operator versions.
+GCP Secret Manager and Cloudflare Zero Trust are external service integrations with no package version pinned here. Application and database instance versions in the external `vinobank-gitops` repository are outside this inventory; the CloudNativePG and Redis entries above are operator versions.
+
+### Certificate and ingress transition
+
+cert-manager (previously 1.18.2), the Let's Encrypt issuer, its Cloudflare DNS credential sync, and the whoami certificate request have been removed. No external-dns deployment existed in this repository. External Secrets Operator remains enabled. Traefik-specific dashboard routes are not selected, and whoami and Weave are currently internal-only while Cloudflare ingress is introduced. Local tests can use direct Service access or port forwarding.
 
 ### New Relic removal
 

@@ -40,12 +40,3 @@ spec:
         kind: HelmRelease
         name: nats
         namespace: infra
-    # use production let's encrypt server
-    - patch: |
-        - op: replace
-          path: /spec/acme/server
-          value: https://acme-v02.api.letsencrypt.org/directory
-      target:
-        kind: ClusterIssuer
-        name: letsencrypt-issuer
-        namespace: infra
