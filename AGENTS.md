@@ -2,6 +2,10 @@
 
 This project contains FluxCD configurations for a Kuberntes Cluster.
 
+Read [README.md](README.md) before making changes. It documents the component
+versions, cluster selections, and upgrade prerequisites. Keep its component
+inventory in sync when changing versions or adding/removing components.
+
 
 ** Important **
 When you upgrade the versions of the components, you'll need to
