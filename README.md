@@ -45,7 +45,8 @@ The following components are managed by FluxCD:
 * [cert-manager](https://cert-manager.io/) setup to works with [Let's Encrpt](https://letsencrypt.org/)
 * [nats streaming](https://nats.io/) light-weigh high performance streaming
 * [CloudNativePG PostgreSQL operator](https://cloudnative-pg.io/) for setting up HA PostgreSQL database instances
-* [New Relic](https://newrelic.com) for infra monitoring, mainly for simpler pricing model on data upload, unlike Datadog's convulated licensing model.
+
+New Relic monitoring has been removed from both cluster configurations following account cancellation. Its Helm release, license secret sync, and sample credential field are no longer included.
 
 ## Boostrap FluxCD in a cluster
 

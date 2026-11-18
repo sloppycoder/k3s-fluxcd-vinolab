@@ -28,15 +28,6 @@ spec:
   path: ./cluster-configs/mockpie/infra/configs
   prune: true
   patches:
-    # set cluster name in NewRelic
-    - patch: |
-        - op: replace
-          path: /spec/values/global/cluster
-          value: mockpie
-      target:
-        kind: HelmRelease
-        name: nri-bundle
-        namespace: infra
     # add file storage to NATS
     - patch: |
         - op: replace
