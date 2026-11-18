@@ -2,6 +2,14 @@
 
 This repo contains the [FluxCD](https://fluxcd.io) setup for my homelab K3S cluster with 6 Raspberry Pi CM4. See [this repo](https://github.com/sloppycoder/k3s-ansible) for hardware details.
 
+## Pending work
+
+Infrastructure and Helm releases reconcile on local OrbStack; the original `testfunc` passes PostgreSQL, Redis, and CloudEvent tests. `app-infra-test` is still reconciling at the latest check.
+
+* Restore normal image automation: refresh the rejected GitHub write credential in GCP `vinobank-gitops-token`, restore authenticated Git access, and remove the temporary suspension, image override, and readiness workaround. Verify build → image detection → Git commit → deployment.
+* Confirm development hostnames and Cloudflare Access policies, then publish and test the Ingress routes. The tunnel is connected; no public routes exist yet.
+* Resurrect super6 and validate its Longhorn/NFS storage and hardware before discussing the merge into `main`. Longhorn was upgraded but not tested locally.
+
 ## Design principles for GitOps
 
 In a large organiztion it is common to have an infra team who is in charge is shared infrastructure components, e.g. Kubernetes clsuters, databases, Redis cache and other compoents; while application teams are respsonbile for deployment of the applcaiton components on top of shared infrastructure mangaed by the infrastructre team.
@@ -80,7 +88,7 @@ GCP Secret Manager and Cloudflare Zero Trust are external service integrations w
 
 OrbStack **2.2.5** runs Kubernetes **1.36.5+orb1** on ARM64 here. Its host has neither `iscsiadm` nor `iscsid`, and no loaded `iscsi_tcp` module was found. The mockpie overlay therefore does not select Longhorn; its shared manifest is upgraded for super6, but Longhorn storage operations are **not tested locally**. Local PVC smoke tests use OrbStack's available storage provisioner. The mockpie NetworkPolicy overrides match this node's pod/service range (`192.168.194.0/24`) and API endpoint (`192.168.139.2:26443`); verify those addresses again if the local cluster is recreated.
 
-The local Flux source and external application source read their public repositories over HTTPS without a deploy key. The old GCP application-repository token is expired and is not used by the local source. metrics-server is included locally for Knative HPAs; its development-only patch accepts OrbStack's kubelet certificate without verification. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is suspended for testing. Its source files remain in the external repository.
+The local Flux source and external application source read their public repositories over HTTPS without a deploy key. The old GCP application-repository credential was rejected and is not used by the local source. metrics-server is included locally for Knative HPAs; its development-only patch accepts OrbStack's kubelet certificate without verification. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is temporarily suspended; restoring the normal workflow remains pending. Its source files remain in the external repository.
 
 Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before reconciling External Secrets; never commit this credential file.
 
@@ -99,7 +107,7 @@ Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before rec
 | Original `testfunc` application | Rebuilt public ARM64/AMD64 image; PostgreSQL and Redis checks pass; direct CloudEvent requests return pong and broker/Trigger delivery is verified. Image repository and policy scans are ready. |
 | Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. No public Ingress routes configured. |
 
-The independent Knative receiver/Trigger were temporary test resources, separate from the unavailable application image. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Cloudflare routes and authentication require a subsequent test once hostnames, token permissions, and Access policies are confirmed.
+The independent Knative receiver/Trigger were temporary test resources used before the original application image was rebuilt. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Cloudflare routes and authentication require a subsequent test once hostnames and Access policies are confirmed.
 
 ### Infrastructure test workload
 
@@ -162,7 +170,7 @@ git push
 
 These clusters are being rebuilt from fresh installations. Current release pins can be selected directly after checking their Kubernetes and node prerequisites; the adjacent-minor migration procedures for existing deployments are not required for an empty cluster.
 
-Work on `develop` and test the local mockpie configuration before discussing promotion to `main` for super6. The planned sequence is: remove New Relic; upgrade Flux and migrate APIs; remove cert-manager and obsolete ingress configuration; upgrade the remaining components; test locally; then introduce Cloudflare Tunnel ingress with Access policies configured before dashboards are published.
+Work on `develop` and test the local mockpie configuration before discussing promotion to `main` for super6. The component upgrades, New Relic/cert-manager removal, local workload tests, and Cloudflare controller installation are complete. Finish the pending work above before promotion; configure Access policies before publishing dashboards.
 
 Flux manifests use stable HelmRelease `v2` and HelmRepository `v1` APIs. Weave GitOps uses an OCIRepository and HelmRelease `chartRef`. The bundle is generated by Flux CLI **2.10.0** for both clusters; this release supports Kubernetes **1.35.2+, 1.36.1+, or 1.37.0+**. The stable Weave GitOps app remains old: its compatibility with these controllers must be verified, rather than inferred from successful chart rendering.
 
