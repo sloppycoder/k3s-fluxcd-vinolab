@@ -31,3 +31,20 @@ gcloud secrets create infra-secret --project project_id --data-file=infra-secret
 # add a new revision
 gcloud secrets versions add infra-secret --project project_id --data-file=infra-secret.json
 ```
+
+
+## Cloudflare Tunnel ingress credentials
+
+The `infra-secret` JSON in GCP Secret Manager must contain:
+
+* `cloudflare_account_id`: the Cloudflare account identifier.
+* `cloudflare_api_token`: a token scoped to the intended account and zone with **Account: Cloudflare Tunnel: Edit**, **Zone: DNS: Edit**, and **Zone: Zone: Read**.
+
+External Secrets maps these fields into `infra/cloudflare-tunnel-credentials`.
+The controller reads that Kubernetes Secret; credentials and the account ID are
+not embedded in manifests. Preserve unrelated fields when adding a new secret
+version. The obsolete `newrelic_license_key` field is no longer needed.
+
+Cloudflare Access applications/policies are configured separately before
+publishing dashboard Ingresses. Local and super6 tunnel names are distinct. Tunnel creation and connector startup
+were verified locally after granting the token tunnel Edit permission.

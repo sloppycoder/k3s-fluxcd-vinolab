@@ -63,27 +63,6 @@ spec:
           port: 443
 
 ---
-# 3.1 allow traefik ingress
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-traefik-ingress
-spec:
-  podSelector:
-    matchLabels:
-      local.dev/pod-type: app
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: traefik
-
----
 # 3.2 allow knative-serving
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -125,14 +104,15 @@ metadata:
   name: allow-ingress-from-knative-eventing
 spec:
   podSelector:
-    local.dev/pod-type: app
+    matchLabels:
+      local.dev/pod-type: app
   policyTypes:
     - Ingress
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
-              name: knative-eventing
+              kubernetes.io/metadata.name: knative-eventing
       ports:
         - protocol: TCP
           port: 8080
@@ -147,14 +127,15 @@ metadata:
   name: allow-egress-to-knative-eventing
 spec:
   podSelector:
-    local.dev/pod-type: app
+    matchLabels:
+      local.dev/pod-type: app
   policyTypes:
     - Egress
   egress:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: knative-eventing
+              kubernetes.io/metadata.name: knative-eventing
       ports:
         - protocol: TCP
           port: 80

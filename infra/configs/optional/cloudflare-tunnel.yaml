@@ -1,0 +1,68 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: cloudflare-tunnel
+  namespace: infra
+spec:
+  interval: 24h
+  url: https://helm.strrl.dev
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: cloudflare-tunnel-credentials
+  namespace: infra
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: gcp-secret-manager
+  target:
+    name: cloudflare-tunnel-credentials
+    creationPolicy: Owner
+    template:
+      data:
+        account_id: "{{ .account_id }}"
+        tunnel_name: k3s-super6
+        api_token: "{{ .api_token }}"
+  data:
+    - secretKey: account_id
+      remoteRef:
+        key: infra-secret
+        property: cloudflare_account_id
+    - secretKey: api_token
+      remoteRef:
+        key: infra-secret
+        property: cloudflare_api_token
+---
+# Install with configurations: credentials depend on the SecretStore and ESO.
+# Putting this release in infra-controllers would deadlock its wait/dependency.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflare-tunnel
+  namespace: infra
+spec:
+  interval: 24h
+  dependsOn:
+    - name: external-secrets
+      namespace: infra
+  chart:
+    spec:
+      chart: cloudflare-tunnel-ingress-controller
+      version: "0.1.0"
+      sourceRef:
+        kind: HelmRepository
+        name: cloudflare-tunnel
+      interval: 12h
+  values:
+    cloudflare:
+      secretRef:
+        name: cloudflare-tunnel-credentials
+        accountIDKey: account_id
+        tunnelNameKey: tunnel_name
+        apiTokenKey: api_token
+    ingressClass:
+      name: cloudflare-tunnel
+      isDefaultClass: false
+    cloudflared:
+      replicaCount: 1

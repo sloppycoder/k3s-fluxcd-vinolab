@@ -14,8 +14,6 @@ spec:
   url: https://github.com/vino9net/vinobank-gitops
   ref:
     branch: develop
-  secretRef:
-    name: vinobank-repo-token
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -28,5 +26,77 @@ spec:
     kind: GitRepository
     name: vinobank-repo-dev
   path: ./infra-test/env/dev
-  wait: true
+  dependsOn:
+    - name: infra-configs
+  # Rebuilt from the original source using its existing manual CI workflow.
+  images:
+    - name: ghcr.io/sloppycoder/testfunc
+      newTag: main-20261118-162131-705da03
+      digest: sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b
+  wait: false
   prune: true
+  # Check every running test workload and image scan. Git-write automation is
+  # intentionally paused and therefore has no Ready condition to wait for.
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: minimal-linux-deployment
+      namespace: test
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: test-postgres
+      namespace: test
+    - apiVersion: redis.redis.opstreelabs.in/v1beta2
+      kind: Redis
+      name: redis-standalone
+      namespace: test
+    - apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: testfunc
+      namespace: test
+    - apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+      namespace: test
+    - apiVersion: eventing.knative.dev/v1
+      kind: Trigger
+      name: testfunc-eventing
+      namespace: test
+    - apiVersion: image.toolkit.fluxcd.io/v1
+      kind: ImageRepository
+      name: testfunc-image-repo
+      namespace: test
+    - apiVersion: image.toolkit.fluxcd.io/v1
+      kind: ImagePolicy
+      name: testfunc-main
+      namespace: test
+  # The application repo still has removed Flux beta APIs. Migrate the rendered
+  # test resources here and disable writes back to that external repository.
+  patches:
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImageUpdateAutomation
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1
+        - op: replace
+          path: /spec/suspend
+          value: true
+        - op: replace
+          path: /spec/git/commit/messageTemplate
+          value: Update infrastructure test images
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImageRepository
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1
+    - target:
+        group: image.toolkit.fluxcd.io
+        kind: ImagePolicy
+      patch: |-
+        - op: replace
+          path: /apiVersion
+          value: image.toolkit.fluxcd.io/v1
