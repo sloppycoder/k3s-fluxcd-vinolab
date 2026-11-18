@@ -109,7 +109,7 @@ The external `vinobank-gitops/infra-test` overlay deploys PostgreSQL, Redis, a h
 * `GET /check`: connect to PostgreSQL and count public-schema tables, then write/read/delete a temporary Redis key. `?source=db` or `?source=redis` selects one check.
 * `POST /`: receive and log a CloudEvent, then return a `dev.vino9.infra.test.infra.pong` reply event.
 
-The old deployment tag was unavailable. The existing [manual build workflow](https://github.com/sloppycoder/testfunc/actions/runs/44266223434) was triggered without changing the source repository, publishing the public multi-architecture tag `main-20261118-162131-705da03`. The local Flux Kustomization overrides the stale external pin with that tag and immutable digest `sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b`. No replacement workload was needed. The intentionally suspended Git-write automation has an explicit health expression so it does not block the other runtime health checks.
+The old deployment tag was unavailable. The existing [manual build workflow](https://github.com/sloppycoder/testfunc/actions/runs/44266223434) was triggered without changing the source repository, publishing the public multi-architecture tag `main-20261118-162131-705da03`. The local Flux Kustomization overrides the stale external pin with that tag and immutable digest `sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b`. No replacement workload was needed. Explicit health checks cover the running test workloads and image scans; intentionally suspended Git-write automation is excluded because it has no Ready condition.
 
 ### Certificate and ingress transition
 

@@ -33,17 +33,43 @@ spec:
     - name: ghcr.io/sloppycoder/testfunc
       newTag: main-20261118-162131-705da03
       digest: sha256:6e325606121e4aa40c210160a7a76fbe805ba66f31848f7e2c840127902d9e8b
-  wait: true
+  wait: false
   prune: true
-  # Paused Git-write automation is intentional during local testing. Continue
-  # checking all other resources without waiting for that controller to run.
-  healthCheckExprs:
+  # Check every running test workload and image scan. Git-write automation is
+  # intentionally paused and therefore has no Ready condition to wait for.
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: minimal-linux-deployment
+      namespace: test
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: test-postgres
+      namespace: test
+    - apiVersion: redis.redis.opstreelabs.in/v1beta2
+      kind: Redis
+      name: redis-standalone
+      namespace: test
+    - apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: testfunc
+      namespace: test
+    - apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+      namespace: test
+    - apiVersion: eventing.knative.dev/v1
+      kind: Trigger
+      name: testfunc-eventing
+      namespace: test
     - apiVersion: image.toolkit.fluxcd.io/v1
-      kind: ImageUpdateAutomation
-      current: >-
-        (has(spec.suspend) && spec.suspend) ||
-        (has(status.conditions) &&
-        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'))
+      kind: ImageRepository
+      name: testfunc-image-repo
+      namespace: test
+    - apiVersion: image.toolkit.fluxcd.io/v1
+      kind: ImagePolicy
+      name: testfunc-main
+      namespace: test
   # The application repo still has removed Flux beta APIs. Migrate the rendered
   # test resources here and disable writes back to that external repository.
   patches:
