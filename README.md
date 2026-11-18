@@ -41,6 +41,7 @@ Versions below describe the checked-in manifests, not an inspection of a running
 
 | Component / purpose | Version in this repo | Selected by | Latest verified stable version / source |
 | --- | --- | --- | --- |
+| Cloudflare Tunnel Ingress Controller (STRRL) | Chart/app **0.1.0**, bundled cloudflared **2026.7.3-host-metrics.1** | Both, [manifest](infra/configs/optional/cloudflare-tunnel.yaml); no public routes selected yet | [0.1.0](https://github.com/STRRL/cloudflare-tunnel-ingress-controller/releases/tag/v0.1.0) |
 | metrics-server — CPU metrics for autoscaling | **0.9.1** | mockpie only, [manifest](infra/controllers/optional/metrics-server/kustomization.yaml) | [0.9.1](https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.9.1) |
 | FluxCD — GitOps controllers | Bundle **2.10.0** | Both clusters | [2.10.0](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) |
 | External Secrets Operator — GCP Secret Manager sync | Chart/app **2.15.0** | Both, [base](infra/controllers/base/external-secrets.yaml) | Chart/app [2.15.0](https://charts.external-secrets.io/index.yaml) |
@@ -57,7 +58,6 @@ Versions below describe the checked-in manifests, not an inspection of a running
 | Traefik whoami — ingress test service | `traefik/whoami:v1.12.0` | Both, [manifest](infra/configs/base/whoami.yaml) | [1.12.0](https://github.com/traefik/whoami/releases/tag/v1.12.0) |
 | Alpine Linux — debug deployment | `alpine:3.24.4` | Available, **not selected**; [manifest](infra/configs/optional/alpine-linux.yaml) | [3.24.4](https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/latest-releases.yaml) |
 | K3s / Kubernetes — underlying cluster | **Not pinned or installed here**; managed outside this repo | Both clusters | Latest published [K3s 1.37.2+k3s1](https://github.com/k3s-io/k3s/releases/tag/v1.37.2%2Bk3s1); choose a supported upgrade path for the actual installed version |
-| Traefik — ingress and dashboards | **Not pinned or installed here**; routes assume it exists | Both clusters | Upstream [3.7.19](https://github.com/traefik/traefik/releases/tag/v3.7.19); use the version compatible with the selected K3s release |
 
 The optional NATS release uses current `config.jetstream` chart values and remains memory-only until persistent storage is explicitly configured. It and NACK are not enabled by either overlay.
 
@@ -84,9 +84,28 @@ The local Flux source and external application source read their public reposito
 
 Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before reconciling External Secrets; never commit this credential file.
 
+### Validation results (2026-11-18)
+
+| Check | Result |
+| --- | --- |
+| Flux 2.10.0 and both local infra Kustomizations | Ready, reconciling `develop` |
+| External Secrets and GCP SecretStore | Ready; dashboard, repository, registry, and tunnel credential mappings sync |
+| CloudNativePG / Redis | Operators ready; local-path PVCs bound; PostgreSQL and Redis queries succeed |
+| metrics-server | Node metrics available; Knative HPA metrics API enabled |
+| Knative Serving / Kourier | Independent HTTP receiver responds through Kourier and scales to zero |
+| Knative Eventing | Synthetic event traverses the default broker and a Trigger; receiver logs confirm delivery |
+| Weave GitOps | Deployment ready and web page returns HTTP 200; authenticated API compatibility is not fully verified |
+| Longhorn / NFS provisioner | Not runtime-tested on OrbStack; super6 manifests render |
+| Legacy external `testfunc` application | Blocked: referenced GHCR tag/package is unavailable; image scan is denied. The source can be fetched, but this app Kustomization cannot become fully ready. |
+| Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. No public Ingress routes configured. |
+
+The independent Knative receiver/Trigger were temporary test resources, separate from the unavailable application image. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Cloudflare routes and authentication require a subsequent test once hostnames, token permissions, and Access policies are confirmed.
+
 ### Certificate and ingress transition
 
-cert-manager (previously 1.18.2), the Let's Encrypt issuer, its Cloudflare DNS credential sync, and the whoami certificate request have been removed. No external-dns deployment existed in this repository. External Secrets Operator remains enabled. Traefik-specific dashboard routes are not selected, and whoami and Weave are currently internal-only while Cloudflare ingress is introduced. Local tests can use direct Service access or port forwarding.
+cert-manager (previously 1.18.2), the Let's Encrypt issuer, its Cloudflare DNS credential sync, and the whoami certificate request have been removed. No external-dns deployment existed in this repository. External Secrets Operator remains enabled. Traefik-specific dashboard routes and middleware are removed; no Traefik controller is required. Kourier remains the Knative ingress. whoami and Weave are currently internal-only until Cloudflare hostnames and Access protection are confirmed. Local tests can use direct Service access or port forwarding.
+
+The STRRL controller uses the explicit `cloudflare-tunnel` IngressClass and manages separate tunnels: `k3s-mockpie-dev` locally and `k3s-super6` for super6. It is selected with infra configurations, after External Secrets, to avoid a controller/credential dependency cycle. Credentials come from `infra-secret.cloudflare_api_token` and `infra-secret.cloudflare_account_id` in GCP Secret Manager; External Secrets creates `infra/cloudflare-tunnel-credentials`. Neither value is embedded in the repository. An Ingress publishes a service but does not create Cloudflare Access applications/policies: configure those before selecting any dashboard Ingress.
 
 ### New Relic removal
 
@@ -94,7 +113,7 @@ New Relic is no longer selected by either cluster. Its `nri-bundle` HelmRelease 
 
 The `infra-configs` Flux Kustomizations have `prune: true`. Once this change reaches each cluster's tracked branch, Flux should prune the old resources and helm-controller should uninstall the New Relic release. **mockpie tracks `develop`; super6 tracks `main`**, so both branches must receive the removal. Verify reconciliation and Helm uninstall completion before treating monitoring as removed. A failed uninstall or an orphaned generated license Secret may need separate cleanup.
 
-The remote `infra-secret` in GCP Secret Manager and ignored local credential files are not changed by GitOps removal. Remove their obsolete `newrelic_license_key` property separately, preserving the remaining credentials. No replacement monitoring stack is configured by this change.
+The latest GCP `infra-secret` version has also been updated to remove `newrelic_license_key` and add `cloudflare_account_id`, preserving all other fields. Historical Secret Manager versions and ignored local credential files remain unchanged. No replacement monitoring stack is configured by this change.
 
 ## Boostrap FluxCD in a cluster
 
