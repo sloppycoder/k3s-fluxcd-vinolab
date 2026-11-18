@@ -9,7 +9,7 @@ inventory in sync when changing versions or adding/removing components.
 
 ## Current workflow
 
-* Work on `develop` for local mockpie/OrbStack testing; `main` drives super6 and has not been merged.
+* Work on `develop` for local mockpie/OrbStack testing; `main` drives super6. Promotion was authorized on 2026-11-18; super6 hardware/runtime validation is deferred until machine access is available.
 * Read README's **Pending work** before continuing. Image automation must be restored; its suspension and local image/readiness overrides are temporary, not the intended workflow. Do not suspend it merely for local testing.
 * Cloudflare account ID/token come from GCP Secret Manager through External Secrets. Keep credentials out of Git.
 * Longhorn is upgraded but excluded/untested locally: host iSCSI tools are missing. `iscsi_tcp.ko` exists but is unloaded; do not assume missing kernel support. Super6 storage still needs testing.
