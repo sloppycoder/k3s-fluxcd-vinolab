@@ -41,6 +41,7 @@ Versions below describe the checked-in manifests, not an inspection of a running
 
 | Component / purpose | Version in this repo | Selected by | Latest verified stable version / source |
 | --- | --- | --- | --- |
+| metrics-server — CPU metrics for autoscaling | **0.9.1** | mockpie only, [manifest](infra/controllers/optional/metrics-server/kustomization.yaml) | [0.9.1](https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.9.1) |
 | FluxCD — GitOps controllers | Bundle **2.10.0** | Both clusters | [2.10.0](https://github.com/fluxcd/flux2/releases/tag/v2.10.0) |
 | External Secrets Operator — GCP Secret Manager sync | Chart/app **2.15.0** | Both, [base](infra/controllers/base/external-secrets.yaml) | Chart/app [2.15.0](https://charts.external-secrets.io/index.yaml) |
 | Longhorn — persistent block storage | **1.13.0** | super6; skipped on OrbStack, [manifest](infra/controllers/optional/longhorn/kustomization.yaml) | [1.13.0](https://github.com/longhorn/longhorn/releases/tag/v1.13.0) |
@@ -79,7 +80,7 @@ GCP Secret Manager and Cloudflare Zero Trust are external service integrations w
 
 OrbStack **2.2.5** runs Kubernetes **1.36.5+orb1** on ARM64 here. Its host has neither `iscsiadm` nor `iscsid`, and no loaded `iscsi_tcp` module was found. The mockpie overlay therefore does not select Longhorn; its shared manifest is upgraded for super6, but Longhorn storage operations are **not tested locally**. Local PVC smoke tests use OrbStack's available storage provisioner. The mockpie NetworkPolicy overrides match this node's pod/service range (`192.168.194.0/24`) and API endpoint (`192.168.139.2:26443`); verify those addresses again if the local cluster is recreated.
 
-The local Flux source reads this public repository over HTTPS without a deploy key. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is suspended for testing. Its source files remain in the external repository.
+The local Flux source and external application source read their public repositories over HTTPS without a deploy key. The old GCP application-repository token is expired and is not used by the local source. metrics-server is included locally for Knative HPAs; its development-only patch accepts OrbStack's kubelet certificate without verification. The external infrastructure-test overlay is patched to stable Flux image APIs, and its image-write automation is suspended for testing. Its source files remain in the external repository.
 
 Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before reconciling External Secrets; never commit this credential file.
 

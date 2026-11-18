@@ -7,3 +7,13 @@ resources:
   - ../../../../infra/controllers/optional/redis-operator.yaml
   - ../../../../infra/controllers/optional/knative-serving
   - ../../../../infra/controllers/optional/knative-eventing
+  - ../../../../infra/controllers/optional/metrics-server
+patches:
+  - target:
+      kind: Deployment
+      name: metrics-server
+      namespace: kube-system
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: --kubelet-insecure-tls
