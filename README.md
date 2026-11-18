@@ -105,7 +105,7 @@ Apply the ignored local `prep/gcpsm-secret.yaml` to the local context before rec
 | Weave GitOps | Deployment ready and web page returns HTTP 200; authenticated API compatibility is not fully verified |
 | Longhorn / NFS provisioner | Not runtime-tested on OrbStack; super6 manifests render |
 | Original `testfunc` application | Rebuilt public ARM64/AMD64 image; PostgreSQL and Redis checks pass; direct CloudEvent requests return pong and broker/Trigger delivery is verified. Image repository and policy scans are ready. |
-| Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. mockpie selects `kube-whoami-dev.vino9.net`; public HTTPS verification is pending. |
+| Cloudflare Tunnel controller | Credential mapping syncs; tunnel created; controller and connector ready after granting tunnel Edit permission. mockpie selects `kube-whoami-dev.vino9.net`; public HTTPS returns HTTP 200 with a valid certificate. |
 
 The independent Knative receiver/Trigger were temporary test resources used before the original application image was rebuilt. Namespace policies match the standard `kubernetes.io/metadata.name` labels; test clients must carry `local.dev/pod-type: app` to use the application egress rules. Additional Cloudflare routes and authentication require testing once hostnames and Access policies are confirmed.
 
