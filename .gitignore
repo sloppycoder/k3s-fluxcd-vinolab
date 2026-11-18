@@ -4,3 +4,4 @@
 gcpsm-secret.yaml
 infra-secret.json
 team-ssh-keys.json
+.DS_Store
